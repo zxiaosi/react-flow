@@ -1,18 +1,34 @@
-function App() {
+import {
+  Background,
+  BackgroundVariant,
+  Controls,
+  MiniMap,
+  ReactFlow,
+  ReactFlowProps,
+  ReactFlowProvider,
+} from '@xyflow/react';
+
+import '@xyflow/react/dist/style.css'; // 引入样式
+
+function App(props: ReactFlowProps) {
   return (
     <div className="h-full w-full">
-      <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-        <div>
-          <div className="text-xl font-bold text-black dark:text-white">
-            ChitChat
-          </div>
-          <p className="text-gray-500 dark:text-gray-400">
-            You have a new message!
-          </p>
-        </div>
-      </div>
+      <ReactFlow proOptions={{ hideAttribution: true }} {...props}>
+        <Controls />
+        <MiniMap />
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+      </ReactFlow>
     </div>
   );
 }
 
-export default App;
+/** App Provider */
+const AppProvider = (props: ReactFlowProps) => {
+  return (
+    <ReactFlowProvider>
+      <App {...props} />
+    </ReactFlowProvider>
+  );
+};
+
+export default AppProvider;
