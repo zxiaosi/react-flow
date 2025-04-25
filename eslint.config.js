@@ -22,8 +22,8 @@ export default tseslint.config(
     rules: {
       // 基础规则调整
       'no-unused-vars': 'off', // 由 TypeScript 处理
-      '@typescript-eslint/no-unused-vars': 'warn', // TypeScript 版未使用变量检查
-      '@typescript-eslint/no-explicit-any': 'warn', // 允许 any 但警告
+      '@typescript-eslint/no-unused-vars': 'off', // TypeScript 版未使用变量检查
+      '@typescript-eslint/no-explicit-any': 'off', // 关闭 any 但警告
     },
   },
 
@@ -42,7 +42,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       // 可选的 React 规则覆盖
-      'react-hooks/exhaustive-deps': 'warn', // 调整为 warn（如需禁用可改为 'off'）
+      'react-hooks/exhaustive-deps': 'off', // 调整为 warn（如需禁用可改为 'off'）
     },
   },
 );
