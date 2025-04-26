@@ -1,2 +1,2 @@
-export { default as CustomMenu } from './customMenu';
-export { default as CustomModal } from './customModal';
+export { default as CustomLeftMenu } from './customLeftMenu';
+export { default as CustomRightConfig } from './customRightConfig';

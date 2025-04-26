@@ -8,7 +8,7 @@ import {
 
 import '@xyflow/react/dist/style.css'; // 引入样式
 import { useShallow } from 'zustand/shallow';
-import { CustomMenu, CustomModal } from './components';
+import { CustomLeftMenu, CustomRightConfig } from './components';
 import useNodeConfig from './hooks/useNodeConfig';
 import useProjectConfig from './hooks/useProjectConfig';
 
@@ -38,11 +38,11 @@ function App(props: ReactFlowProps) {
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         )}
 
-        {/* 自定义菜单 */}
-        <CustomMenu />
+        {/* 自定义左侧菜单 */}
+        <CustomLeftMenu />
 
-        {/* 自定义配置 */}
-        {showModal && <CustomModal />}
+        {/* 自定义右侧配置 */}
+        {showModal && <CustomRightConfig />}
       </ReactFlow>
     </div>
   );
