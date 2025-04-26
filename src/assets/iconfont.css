@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4901067 */
-  src: url('iconfont.woff2?t=1745251751265') format('woff2'),
-       url('iconfont.woff?t=1745251751265') format('woff'),
-       url('iconfont.ttf?t=1745251751265') format('truetype');
+  src: url('iconfont.woff2?t=1745658814328') format('woff2'),
+       url('iconfont.woff?t=1745658814328') format('woff'),
+       url('iconfont.ttf?t=1745658814328') format('truetype');
 }
 
 .iconfont {
@@ -13,31 +13,59 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-taiyang1:before {
+.icon-square:before {
+  content: "\e600";
+}
+
+.icon-horizontal:before {
+  content: "\e601";
+}
+
+.icon-round-square:before {
+  content: "\e652";
+}
+
+.icon-export:before {
+  content: "\e60f";
+}
+
+.icon-lozenge:before {
+  content: "\e636";
+}
+
+.icon-fit-view:before {
+  content: "\e6f0";
+}
+
+.icon-vertical:before {
+  content: "\e602";
+}
+
+.icon-sun:before {
   content: "\e611";
 }
 
-.icon-baocun:before {
+.icon-save:before {
   content: "\e63b";
 }
 
-.icon-beijing:before {
+.icon-background:before {
   content: "\e661";
 }
 
-.icon-xiazai:before {
+.icon-download:before {
   content: "\e741";
 }
 
-.icon-yueliang:before {
+.icon-moon:before {
   content: "\e634";
 }
 
-.icon-kongzhiqi:before {
+.icon-control:before {
   content: "\e6c0";
 }
 
-.icon-xiaoditu:before {
+.icon-min-map:before {
   content: "\e680";
 }
 

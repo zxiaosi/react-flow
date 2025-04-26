@@ -6,51 +6,100 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6141181",
+      "name": "方块",
+      "font_class": "square",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "7336604",
+      "name": "水平",
+      "font_class": "horizontal",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7827337",
+      "name": "圆角方块",
+      "font_class": "round-square",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "8551032",
+      "name": "导出",
+      "font_class": "export",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "9040956",
+      "name": "菱形",
+      "font_class": "lozenge",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "41685248",
+      "name": "铺满",
+      "font_class": "fit-view",
+      "unicode": "e6f0",
+      "unicode_decimal": 59120
+    },
+    {
+      "icon_id": "42152687",
+      "name": "垂直",
+      "font_class": "vertical",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
       "icon_id": "8936804",
       "name": "太阳",
-      "font_class": "taiyang1",
+      "font_class": "sun",
       "unicode": "e611",
       "unicode_decimal": 58897
     },
     {
       "icon_id": "1305399",
       "name": "保存",
-      "font_class": "baocun",
+      "font_class": "save",
       "unicode": "e63b",
       "unicode_decimal": 58939
     },
     {
       "icon_id": "10939892",
       "name": "背景",
-      "font_class": "beijing",
+      "font_class": "background",
       "unicode": "e661",
       "unicode_decimal": 58977
     },
     {
       "icon_id": "11519631",
       "name": "下载",
-      "font_class": "xiazai",
+      "font_class": "download",
       "unicode": "e741",
       "unicode_decimal": 59201
     },
     {
       "icon_id": "16684566",
       "name": "月亮",
-      "font_class": "yueliang",
+      "font_class": "moon",
       "unicode": "e634",
       "unicode_decimal": 58932
     },
     {
       "icon_id": "20488003",
-      "name": "控制器",
-      "font_class": "kongzhiqi",
+      "name": "控制",
+      "font_class": "control",
       "unicode": "e6c0",
       "unicode_decimal": 59072
     },
     {
       "icon_id": "40598312",
       "name": "小地图",
-      "font_class": "xiaoditu",
+      "font_class": "min-map",
       "unicode": "e680",
       "unicode_decimal": 59008
     }
