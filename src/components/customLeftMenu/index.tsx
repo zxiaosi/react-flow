@@ -1,13 +1,21 @@
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
 import { Panel, useReactFlow } from '@xyflow/react';
+import { useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 /** 自定义左侧菜单 */
@@ -29,6 +37,8 @@ const CustomLeftMenu = () => {
   const { onDrageNodeData } = useNodeConfig(
     useShallow((state) => ({ onDrageNodeData: state.onDrageNodeData })),
   );
+
+  const [dialogOpen, setDialogOpen] = useState(false); // 弹框是否打开
 
   /** 菜单数据 */
   const menuItems = [
@@ -89,9 +99,7 @@ const CustomLeftMenu = () => {
         fitView();
         break;
       case 'export': {
-        const nodes = getNodes();
-        const edges = getEdges();
-        console.log(nodes, edges);
+        setDialogOpen(true);
         break;
       }
       case 'horizontal':
@@ -111,51 +119,85 @@ const CustomLeftMenu = () => {
     onDrageNodeData?.(child);
   };
 
+  /** 弹框打开事件 */
+  const handleOpenChange = (open) => {
+    if (!open) setDialogOpen(false);
+  };
+
   return (
-    <Panel position="top-left">
-      <div className="grid w-[200px] gap-4 rounded border-1 border-gray-200 bg-white p-3 shadow">
-        {menuItems.map((item) => (
-          <div key={item.name}>
-            <div className="mb-2 text-sm font-bold">{item.label}</div>
-            <div className="flex flex-wrap gap-2">
-              {item.children.map((child) => {
-                return child?.type === 'select' ? (
-                  <Select
-                    key={child.name}
-                    defaultValue={child?.options?.[0]?.value}
-                  >
-                    <SelectTrigger className="w-[86px]">
-                      <SelectValue placeholder="Theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {child.options.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div
-                    key={child.name}
-                    className={`h-[36px] w-[36px] rounded bg-gray-100 text-gray-600 caret-transparent hover:bg-gray-200 ${item.name === 'node' ? 'cursor-move' : 'cursor-pointer'} `}
-                    draggable={item.name === 'node'}
-                    onClick={() => handleClick(child)}
-                    onDragStart={(e) => handleDragStart(e, item, child)}
-                  >
-                    <span
-                      title={child.label}
-                      className={`iconfont flex h-full w-full items-center justify-center ${!showBg && child.name === 'background' ? 'text-gray-300' : ''}`}
-                      dangerouslySetInnerHTML={{ __html: child.icon }}
-                    ></span>
-                  </div>
-                );
-              })}
+    <>
+      <Panel position="top-left">
+        <div className="grid w-[200px] gap-4 rounded border-1 border-gray-200 bg-white p-3 shadow">
+          {menuItems.map((item) => (
+            <div key={item.name}>
+              <div className="mb-2 text-sm font-bold">{item.label}</div>
+              <div className="flex flex-wrap gap-2">
+                {item.children.map((child) => {
+                  return child?.type === 'select' ? (
+                    <Select
+                      key={child.name}
+                      defaultValue={child?.options?.[0]?.value}
+                    >
+                      <SelectTrigger className="w-[86px]">
+                        <SelectValue placeholder="Theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {child.options.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <div
+                      key={child.name}
+                      className={`h-[36px] w-[36px] rounded bg-gray-100 text-gray-600 caret-transparent hover:bg-gray-200 ${item.name === 'node' ? 'cursor-move' : 'cursor-pointer'} `}
+                      draggable={item.name === 'node'}
+                      onClick={() => handleClick(child)}
+                      onDragStart={(e) => handleDragStart(e, item, child)}
+                    >
+                      <span
+                        title={child.label}
+                        className={`iconfont flex h-full w-full items-center justify-center ${!showBg && child.name === 'background' ? 'text-gray-300' : ''}`}
+                        dangerouslySetInnerHTML={{ __html: child.icon }}
+                      ></span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </Panel>
+          ))}
+        </div>
+      </Panel>
+
+      <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>导出</DialogTitle>
+            <div className="grid gap-4">
+              <div>
+                <div className="mb-2">节点列表</div>
+                <Textarea
+                  spellCheck={false}
+                  className="max-h-[200px]"
+                  defaultValue={JSON.stringify(getNodes(), null, 2)}
+                />
+              </div>
+
+              <div>
+                <div className="mb-2">边列表</div>
+                <Textarea
+                  spellCheck={false}
+                  className="max-h-[200px]"
+                  defaultValue={JSON.stringify(getEdges(), null, 2)}
+                />
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 export default CustomLeftMenu;

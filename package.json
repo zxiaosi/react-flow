@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.11",
     "@radix-ui/react-select": "^2.2.2",
     "@xyflow/react": "^12.6.0",
     "class-variance-authority": "^0.7.1",
