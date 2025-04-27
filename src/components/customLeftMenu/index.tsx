@@ -1,7 +1,7 @@
+import useProjectConfig from '@/hooks/useProjectConfig';
 import { Panel, useReactFlow } from '@xyflow/react';
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
-import useProjectConfig from '../../hooks/useProjectConfig';
 
 /** 自定义左侧菜单 */
 const CustomLeftMenu = () => {

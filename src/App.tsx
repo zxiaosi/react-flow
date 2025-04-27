@@ -6,11 +6,12 @@ import {
   ReactFlowProvider,
 } from '@xyflow/react';
 
-import '@xyflow/react/dist/style.css'; // 引入样式
+import { CustomLeftMenu, CustomRightConfig } from '@/components';
+import useNodeConfig from '@/hooks/useNodeConfig';
+import useProjectConfig from '@/hooks/useProjectConfig';
 import { useShallow } from 'zustand/shallow';
-import { CustomLeftMenu, CustomRightConfig } from './components';
-import useNodeConfig from './hooks/useNodeConfig';
-import useProjectConfig from './hooks/useProjectConfig';
+
+import '@xyflow/react/dist/style.css'; // 引入样式
 
 /**
  * 老版本谷歌浏览器的兼容性问题
