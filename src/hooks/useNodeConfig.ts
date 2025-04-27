@@ -8,14 +8,14 @@ interface Props {
   /** 是否显示弹框 */
   showModal?: boolean;
   /** 显示/隐藏弹框切换事件 */
-  onChangeShowModal?: () => void;
+  onChangeShowModal?: (show: boolean) => void;
 }
 
 /** 节点配置 */
 const useNodeConfig = create<Props>((set) => ({
   showModal: false,
-  onChangeShowModal: () => {
-    set((state) => ({ showModal: !state.showModal }));
+  onChangeShowModal: (show) => {
+    set(() => ({ showModal: show }));
   },
   drageNodeData: null,
   onDrageNodeData: (nodeData) => {

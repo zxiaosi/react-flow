@@ -12,15 +12,22 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 
-import { CustomLeftMenu, CustomRightConfig } from '@/components';
+import {
+  CustomContextMenu,
+  CustomLeftMenu,
+  CustomRightConfig,
+} from '@/components';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
 import { useShallow } from 'zustand/shallow';
 
 import '@xyflow/react/dist/style.css'; // 引入样式
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
+/** 唯一id */
 let id = 0;
+
+/** 生成唯一id */
 const getId = () => `node_${id++}`;
 
 /**
@@ -46,10 +53,15 @@ function App(props: ReactFlowProps) {
     })),
   );
 
+  const ref = useRef<HTMLDivElement>(null); // 画布ref
+
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]); // 节点
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]); // 边
+  const [contextMenu, setContextMenu] = useState({}); // 右键菜单
 
-  const onConnect = (params: any) => setEdges((eds) => addEdge(params, eds)); // 连接线
+  /** 节点连线事件 */
+  const handleConnect = (params: any) =>
+    setEdges((eds) => addEdge(params, eds));
 
   /** 节点拖拽中事件 */
   const handleDragOver = useCallback((event: React.DragEvent) => {
@@ -76,16 +88,40 @@ function App(props: ReactFlowProps) {
     [drageNodeData],
   );
 
+  /** 右键菜单事件 */
+  const handleNodeContextMenu = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.preventDefault();
+
+      const pane = ref.current?.getBoundingClientRect?.(); // 获取画布的宽高
+      const { width, height } = pane || { width: 0, height: 0 };
+      setContextMenu({
+        id: node.id,
+        top: event.clientY < height - 200 && event.clientY,
+        left: event.clientX < width - 200 && event.clientX,
+        right: event.clientX >= width - 200 && width - event.clientX,
+        bottom: event.clientY >= height - 200 && height - event.clientY,
+      });
+    },
+    [],
+  );
+
+  /** 点击面板事件 */
+  const handlePaneClick = useCallback(() => setContextMenu({}), []);
+
   return (
     <div className="h-full w-full">
       <ReactFlow
+        ref={ref}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onDragOver={handleDragOver}
+        onConnect={handleConnect}
         onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onPaneClick={handlePaneClick}
+        onNodeContextMenu={handleNodeContextMenu}
         proOptions={{ hideAttribution: true }}
         {...props}
       >
@@ -99,6 +135,11 @@ function App(props: ReactFlowProps) {
 
         {/* 自定义右侧配置 */}
         {showModal && <CustomRightConfig />}
+
+        {/* 自定义右键菜单 */}
+        {Object.keys(contextMenu).length > 0 && (
+          <CustomContextMenu onClick={handlePaneClick} {...contextMenu} />
+        )}
       </ReactFlow>
     </div>
   );
