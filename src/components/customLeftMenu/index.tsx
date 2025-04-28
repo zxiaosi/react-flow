@@ -14,6 +14,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
+import { getLayoutedElementsUtil } from '@/utils';
 import { Panel, useReactFlow } from '@xyflow/react';
 import { useState } from 'react';
 import { useShallow } from 'zustand/shallow';
@@ -21,7 +22,7 @@ import { useShallow } from 'zustand/shallow';
 /** 自定义左侧菜单 */
 const CustomLeftMenu = () => {
   /** react-flow 实例方法 */
-  const { fitView, getEdges, getNodes } = useReactFlow();
+  const { fitView, getEdges, getNodes, setNodes, setEdges } = useReactFlow();
 
   /** 项目配置 */
   const { showBg, onChangeShowBg, theme, onChangeTheme } = useProjectConfig(
@@ -65,7 +66,7 @@ const CustomLeftMenu = () => {
           type: 'select',
           options: [
             { label: 'Dagre', value: 'dagre' },
-            { label: 'Elkjs', value: 'elkjs' },
+            // { label: 'Elkjs', value: 'elkjs' },
           ],
         },
         { name: 'horizontal', label: '水平', icon: '&#xe601;' },
@@ -103,11 +104,20 @@ const CustomLeftMenu = () => {
         break;
       }
       case 'horizontal':
-        console.log('horizontal');
+      case 'vertical': {
+        const nodes = getNodes();
+        const edges = getEdges();
+        const direction = item.name === 'horizontal' ? 'LR' : 'TB';
+
+        const { nodes: layoutNodes, edges: layoutEdges } =
+          getLayoutedElementsUtil(nodes, edges, direction);
+        console.log(layoutNodes, layoutEdges);
+
+        setNodes(layoutNodes);
+        setEdges(layoutEdges);
+        fitView();
         break;
-      case 'vertical':
-        console.log('vertical');
-        break;
+      }
       case 'default':
         break;
     }
@@ -160,7 +170,7 @@ const CustomLeftMenu = () => {
                       <span
                         title={child.label}
                         className={`iconfont flex h-full w-full items-center justify-center ${!showBg && child.name === 'background' ? 'text-gray-300' : ''}`}
-                        dangerouslySetInnerHTML={{ __html: child.icon }}
+                        dangerouslySetInnerHTML={{ __html: child.icon || '' }}
                       ></span>
                     </div>
                   );

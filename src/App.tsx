@@ -19,10 +19,10 @@ import {
 } from '@/components';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
+import { useCallback, useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 import '@xyflow/react/dist/style.css'; // 引入样式
-import { useCallback, useRef, useState } from 'react';
 
 /** 唯一id */
 let id = 0;
@@ -31,8 +31,12 @@ let id = 0;
 const getId = () => `node_${id++}`;
 
 /**
- * 老版本谷歌浏览器的兼容性问题
- * - 遇到 fitView() 方法不生效问题, 可以选择降版本处理, 可以试试v12.4.4版本
+ * 自定义拓扑
+ * - nodes节点数据 中必须含有 宽 和 高, 否则 dagrejs 无法布局
+ * - 浏览器版本问题 (eg: chromev89.0.4389.90)
+ *    + dagrejs/dagre v1.1.4 版本使用了es2022语法，会报 Object.hasOwn is not a function 错误
+ *    + xyflow/react v12.5.5 及以上版本 fitView 功能失效
+ * - xyflow/react v12.4.4 , dagrejs/dagre v1.1.3 版本 可以解决上面问题
  */
 function App(props: ReactFlowProps) {
   /** react-flow 实例方法 */
@@ -81,7 +85,7 @@ function App(props: ReactFlowProps) {
       });
       const id = getId();
       const type = drageNodeData?.name;
-      const newNode = { id, type, position, data: { label: `${type} ${id} ` } };
+      const newNode = { id, type, position, data: { label: `${type} ${id}` } };
 
       setNodes((nds) => nds.concat(newNode));
     },
@@ -106,8 +110,27 @@ function App(props: ReactFlowProps) {
     [],
   );
 
+  /** 关闭右键菜单事件 */
+  const handleCloseContextMenu = useCallback(() => {
+    setContextMenu({});
+  }, []);
+
+  /** 点击节点事件 */
+  const handleNodeClick = useCallback(() => {
+    console.log('handleNodeClick');
+    handleCloseContextMenu();
+  }, [handleCloseContextMenu]);
+
   /** 点击面板事件 */
-  const handlePaneClick = useCallback(() => setContextMenu({}), []);
+  const handlePaneClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+
+      console.log('handlePaneClick');
+      handleCloseContextMenu();
+    },
+    [handleCloseContextMenu],
+  );
 
   return (
     <div className="h-full w-full">
@@ -121,6 +144,7 @@ function App(props: ReactFlowProps) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onPaneClick={handlePaneClick}
+        onNodeClick={handleNodeClick}
         onNodeContextMenu={handleNodeContextMenu}
         proOptions={{ hideAttribution: true }}
         {...props}
@@ -138,7 +162,10 @@ function App(props: ReactFlowProps) {
 
         {/* 自定义右键菜单 */}
         {Object.keys(contextMenu).length > 0 && (
-          <CustomContextMenu onClick={handlePaneClick} {...contextMenu} />
+          <CustomContextMenu
+            onClick={handleCloseContextMenu}
+            {...contextMenu}
+          />
         )}
       </ReactFlow>
     </div>
