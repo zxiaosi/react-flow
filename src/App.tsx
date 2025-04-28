@@ -50,10 +50,11 @@ function App(props: ReactFlowProps) {
   );
 
   /** 节点配置 */
-  const { drageNodeData, showModal } = useNodeConfig(
+  const { drageNodeData, modalId, onChangeModalId } = useNodeConfig(
     useShallow((state) => ({
       drageNodeData: state.drageNodeData,
-      showModal: state.showModal,
+      modalId: state.modalId,
+      onChangeModalId: state.onChangeModalId,
     })),
   );
 
@@ -124,10 +125,11 @@ function App(props: ReactFlowProps) {
   /** 点击面板事件 */
   const handlePaneClick = useCallback(
     (event: React.MouseEvent) => {
-      event.stopPropagation();
+      event.preventDefault();
 
       console.log('handlePaneClick');
       handleCloseContextMenu();
+      onChangeModalId?.(''); // 关闭弹框
     },
     [handleCloseContextMenu],
   );
@@ -158,7 +160,7 @@ function App(props: ReactFlowProps) {
         <CustomLeftMenu />
 
         {/* 自定义右侧配置 */}
-        {showModal && <CustomRightConfig />}
+        {modalId && <CustomRightConfig />}
 
         {/* 自定义右键菜单 */}
         {Object.keys(contextMenu).length > 0 && (

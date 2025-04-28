@@ -5,17 +5,17 @@ interface Props {
   drageNodeData?: any;
   /** 拖拽节点数据事件 */
   onDrageNodeData?: (data: any) => void;
-  /** 是否显示弹框 */
-  showModal?: boolean;
+  /** 显示弹框id */
+  modalId?: string;
   /** 显示/隐藏弹框切换事件 */
-  onChangeShowModal?: (show: boolean) => void;
+  onChangeModalId?: (id: string) => void;
 }
 
 /** 节点配置 */
 const useNodeConfig = create<Props>((set) => ({
-  showModal: false,
-  onChangeShowModal: (show) => {
-    set(() => ({ showModal: show }));
+  modalId: '',
+  onChangeModalId: (id) => {
+    set(() => ({ modalId: id }));
   },
   drageNodeData: null,
   onDrageNodeData: (nodeData) => {

@@ -111,7 +111,6 @@ const CustomLeftMenu = () => {
 
         const { nodes: layoutNodes, edges: layoutEdges } =
           getLayoutedElementsUtil(nodes, edges, direction);
-        console.log(layoutNodes, layoutEdges);
 
         setNodes(layoutNodes);
         setEdges(layoutEdges);
