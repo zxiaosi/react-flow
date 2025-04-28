@@ -160,7 +160,7 @@ function App(props: ReactFlowProps) {
         <CustomLeftMenu />
 
         {/* 自定义右侧配置 */}
-        {modalId && <CustomRightConfig />}
+        {modalId && <CustomRightConfig nodeId={modalId} />}
 
         {/* 自定义右键菜单 */}
         {Object.keys(contextMenu).length > 0 && (

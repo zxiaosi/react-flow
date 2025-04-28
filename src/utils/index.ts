@@ -60,3 +60,77 @@ export const getLayoutedElementsUtil = (
 
   return { nodes: newNodes, edges };
 };
+
+/**
+ * 根据路径从对象中获取值
+ * @param obj 要查找的对象
+ * @param path 路径，可以是字符串、数字或数组
+ * @returns 对应的值，如果路径不存在则返回 undefined
+ */
+export function getValueByPathUtil<T = any>(
+  obj: Record<string | number, any>,
+  path: string | number | Array<string | number>,
+): T | undefined {
+  if (!obj || typeof obj !== 'object') {
+    return undefined;
+  }
+
+  // 统一处理路径为数组形式
+  const pathArray = Array.isArray(path) ? path : [path];
+
+  let current: any = obj;
+  for (const key of pathArray) {
+    if (current == null) {
+      return undefined;
+    }
+
+    // 检查当前对象是否有该属性
+    if (typeof current === 'object' && key in current) {
+      current = current[key];
+    } else {
+      return undefined;
+    }
+  }
+
+  return current as T;
+}
+
+/**
+ * 根据路径设置对象中的值
+ * @param obj 要设置的对象
+ * @param path 路径，可以是字符串、数字或数组
+ * @param value 要设置的值
+ * @return 设置后的对象
+ */
+export function setValueByPathUtil(
+  obj: Record<string | number, any>,
+  path: string | number | Array<string | number>,
+  value: any,
+) {
+  if (!obj || typeof obj !== 'object') {
+    return;
+  }
+
+  // 统一处理路径为数组形式
+  const pathArray = Array.isArray(path) ? path : [path];
+
+  let current = obj;
+  for (let i = 0; i < pathArray.length; i++) {
+    const key = pathArray[i];
+
+    // 如果是最后一个键，则设置值
+    if (i === pathArray.length - 1) {
+      current[key] = value;
+      return;
+    }
+
+    // 如果中间路径不存在，则创建对象
+    if (current[key] == null) {
+      current[key] = {};
+    }
+
+    current = current[key];
+  }
+
+  return current;
+}
