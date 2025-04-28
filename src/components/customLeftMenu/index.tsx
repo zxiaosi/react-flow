@@ -35,8 +35,11 @@ const CustomLeftMenu = () => {
   );
 
   /** 节点配置 */
-  const { onDrageNodeData } = useNodeConfig(
-    useShallow((state) => ({ onDrageNodeData: state.onDrageNodeData })),
+  const { onDrageNodeData, onChangeModalId } = useNodeConfig(
+    useShallow((state) => ({
+      onDrageNodeData: state.onDrageNodeData,
+      onChangeModalId: state.onChangeModalId,
+    })),
   );
 
   const [dialogOpen, setDialogOpen] = useState(false); // 弹框是否打开
@@ -87,6 +90,8 @@ const CustomLeftMenu = () => {
 
   /** 菜单点击事件 */
   const handleClick = (item) => {
+    onChangeModalId?.(''); // 清空弹框id
+
     if (item.name === 'node') return;
 
     switch (item.name) {
@@ -124,6 +129,8 @@ const CustomLeftMenu = () => {
 
   /** 菜单拖拽开始事件 */
   const handleDragStart = (e, item, child) => {
+    onChangeModalId?.(''); // 清空弹框id
+
     if (item.name !== 'node') return;
     onDrageNodeData?.(child);
   };
