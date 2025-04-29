@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { LINE_TYPE, THEME_TYPE } from '@/global';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
 import { getLayoutedElementsUtil } from '@/utils';
@@ -25,12 +26,25 @@ const CustomLeftMenu = ({ onClick }) => {
   const { fitView, getEdges, getNodes, setNodes, setEdges } = useReactFlow();
 
   /** 项目配置 */
-  const { showBg, onChangeShowBg, theme, onChangeTheme } = useProjectConfig(
+  const {
+    showBg,
+    onChangeShowBg,
+    themeIdx,
+    onChangeThemeIdx,
+    lineTypeIdx,
+    onChangeLineTypeIdx,
+    lineAnimated,
+    onChangeLineAnimated,
+  } = useProjectConfig(
     useShallow((state) => ({
       showBg: state.showBg,
       onChangeShowBg: state.onChangeShowBg,
-      theme: state.theme,
-      onChangeTheme: state.onChangeTheme,
+      themeIdx: state.themeIdx,
+      onChangeThemeIdx: state.onChangeThemeIdx,
+      lineTypeIdx: state.lineTypeIdx,
+      onChangeLineTypeIdx: state.onChangeLineTypeIdx,
+      lineAnimated: state.lineAnimated,
+      onChangeLineAnimated: state.onChangeLineAnimated,
     })),
   );
 
@@ -51,12 +65,29 @@ const CustomLeftMenu = ({ onClick }) => {
       label: '项目',
       children: [
         {
+          name: 'background',
+          label: '背景',
+          icon: '&#xe661;',
+          selected: showBg,
+        },
+        { name: 'fitView', label: '铺满', icon: '&#xe6f0;' },
+        {
+          name: 'lineType',
+          label: '线类型',
+          icon: LINE_TYPE[lineTypeIdx!]?.icon,
+        },
+        {
+          name: 'lineAnimation',
+          label: '线动画',
+          icon: '&#xe831;',
+          selected: lineAnimated,
+        },
+        {
           name: 'theme',
           label: '主题',
-          icon: theme === 'light' ? '&#xe611;' : '&#xe634;',
+          icon: THEME_TYPE[themeIdx!]?.icon,
         },
-        { name: 'background', label: '背景', icon: '&#xe661;' },
-        { name: 'fitView', label: '铺满', icon: '&#xe6f0;' },
+        { name: 'clear', label: '清空', icon: '&#xe681;' },
         { name: 'export', label: '导出', icon: '&#xe60f;' },
       ],
     },
@@ -95,15 +126,46 @@ const CustomLeftMenu = ({ onClick }) => {
     if (item.name === 'node') return;
 
     switch (item.name) {
-      case 'theme':
-        onChangeTheme?.();
-        break;
       case 'background':
         onChangeShowBg?.();
         break;
       case 'fitView':
         fitView();
         break;
+      case 'lineType': {
+        const idx = LINE_TYPE.findIndex((_) => _.icon === item.icon); // 判断是否存在
+        const newIdx = (idx + 1) % LINE_TYPE.length; // 取余
+        onChangeLineTypeIdx?.(newIdx); // 取余
+
+        const edges = getEdges();
+        const newEdges = edges.map((edge) => ({
+          ...edge,
+          type: LINE_TYPE[newIdx].value,
+        }));
+        setEdges(newEdges); // 更新线段类型
+        break;
+      }
+      case 'lineAnimation': {
+        onChangeLineAnimated?.();
+
+        const edges = getEdges();
+        const newEdges = edges.map((edge) => ({
+          ...edge,
+          animated: !edge.animated,
+        }));
+        setEdges(newEdges); // 更新线段类型
+        break;
+      }
+      case 'theme': {
+        const idx = THEME_TYPE.findIndex((_) => _.icon === item.icon); // 判断是否存在
+        onChangeThemeIdx?.((idx + 1) % THEME_TYPE.length); // 取余
+        break;
+      }
+      case 'clear': {
+        setNodes([]);
+        setEdges([]);
+        break;
+      }
       case 'export': {
         setDialogOpen(true);
         break;
@@ -151,17 +213,22 @@ const CustomLeftMenu = ({ onClick }) => {
             <div key={item.name}>
               <div className="mb-2 text-sm font-bold">{item.label}</div>
               <div className="flex flex-wrap gap-2">
-                {item.children.map((child) => {
-                  return child?.type === 'select' ? (
-                    <Select
-                      key={child.name}
-                      defaultValue={child?.options?.[0]?.value}
-                    >
+                {item.children.map((child: any) => {
+                  const {
+                    name,
+                    label,
+                    icon,
+                    type = '',
+                    options = [],
+                    selected = false,
+                  } = child;
+                  return type === 'select' ? (
+                    <Select key={name} defaultValue={options?.[0]?.value}>
                       <SelectTrigger className="w-[86px]">
                         <SelectValue placeholder="Theme" />
                       </SelectTrigger>
                       <SelectContent>
-                        {child.options.map((option) => (
+                        {options.map((option: any) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>
@@ -170,16 +237,16 @@ const CustomLeftMenu = ({ onClick }) => {
                     </Select>
                   ) : (
                     <div
-                      key={child.name}
-                      className={`h-[36px] w-[36px] rounded bg-gray-100 text-gray-600 caret-transparent hover:bg-gray-200 ${item.name === 'node' ? 'cursor-move' : 'cursor-pointer'} `}
+                      key={name}
+                      className={`h-[36px] w-[36px] rounded bg-gray-100 caret-transparent hover:bg-gray-200 ${item.name === 'node' ? 'cursor-move' : 'cursor-pointer'} text-gray-${selected ? 200 : 600} `}
                       draggable={item.name === 'node'}
                       onClick={() => handleClick(child)}
                       onDragStart={(e) => handleDragStart(e, item, child)}
                     >
                       <span
-                        title={child.label}
-                        className={`iconfont flex h-full w-full items-center justify-center ${!showBg && child.name === 'background' ? 'text-gray-300' : ''}`}
-                        dangerouslySetInnerHTML={{ __html: child.icon || '' }}
+                        title={label}
+                        className={`iconfont flex h-full w-full items-center justify-center`}
+                        dangerouslySetInnerHTML={{ __html: icon || '' }}
                       ></span>
                     </div>
                   );
