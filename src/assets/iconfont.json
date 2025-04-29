@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40166084",
+      "name": "折线",
+      "font_class": "step",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "17581240",
+      "name": "平滑折线",
+      "font_class": "smoothstep",
+      "unicode": "ec36",
+      "unicode_decimal": 60470
+    },
+    {
+      "icon_id": "587163",
+      "name": "动画",
+      "font_class": "animation",
+      "unicode": "e831",
+      "unicode_decimal": 59441
+    },
+    {
+      "icon_id": "1304965",
+      "name": "清空",
+      "font_class": "clear",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "4303431",
+      "name": "贝塞尔线",
+      "font_class": "bezier",
+      "unicode": "e6a9",
+      "unicode_decimal": 59049
+    },
+    {
+      "icon_id": "28503083",
+      "name": "直线",
+      "font_class": "straight",
+      "unicode": "e6bb",
+      "unicode_decimal": 59067
+    },
+    {
       "icon_id": "29316345",
       "name": "组",
       "font_class": "group",
