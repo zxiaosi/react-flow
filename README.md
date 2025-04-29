@@ -2,6 +2,8 @@
 
 ## [React Flow](https://reactflow.dev/)
 
-## [Tailwind CSS](https://tailwindcss.com/docs/installation/using-vite)
+## [Tailwind CSS](https://v3.tailwindcss.com/docs/guides/vite) `^3.4.17`
+
+## [Shadcn UI](https://ui.shadcn.com/docs) `v2.3.0`
 
 ## [Icon](https://at.alicdn.com/t/c/font_4901067_bpjpu0gcez4.js)

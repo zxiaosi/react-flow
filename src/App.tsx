@@ -33,10 +33,8 @@ const getId = () => `node_${id++}`;
 /**
  * 自定义拓扑
  * - nodes节点数据 中必须含有 宽 和 高, 否则 dagrejs 无法布局
- * - 浏览器版本问题 (eg: chromev89.0.4389.90)
- *    + dagrejs/dagre v1.1.4 版本使用了es2022语法，会报 Object.hasOwn is not a function 错误
- *    + xyflow/react v12.5.5 及以上版本 fitView 功能失效
- * - xyflow/react v12.4.4 , dagrejs/dagre v1.1.3 版本 可以解决上面问题
+ * - dagrejs/dagre v1.1.4 在老版浏览器(eg: chromev89.0.4389.90) 会报 Object.hasOwn is not a function 错误
+ * - dagrejs/dagre v1.1.3 版本 可以解决上面问题
  */
 function App(props: ReactFlowProps) {
   /** react-flow 实例方法 */
@@ -123,16 +121,11 @@ function App(props: ReactFlowProps) {
   }, [handleCloseContextMenu]);
 
   /** 点击面板事件 */
-  const handlePaneClick = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault();
-
-      console.log('handlePaneClick');
-      handleCloseContextMenu();
-      onChangeModalId?.(''); // 关闭弹框
-    },
-    [handleCloseContextMenu],
-  );
+  const handlePaneClick = useCallback(() => {
+    console.log('handlePaneClick');
+    handleCloseContextMenu();
+    onChangeModalId?.(''); // 关闭弹框
+  }, [handleCloseContextMenu, onChangeModalId]);
 
   return (
     <div className="h-full w-full">
