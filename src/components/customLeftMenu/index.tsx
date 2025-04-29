@@ -16,11 +16,11 @@ import useNodeConfig from '@/hooks/useNodeConfig';
 import useProjectConfig from '@/hooks/useProjectConfig';
 import { getLayoutedElementsUtil } from '@/utils';
 import { Panel, useReactFlow } from '@xyflow/react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 /** 自定义左侧菜单 */
-const CustomLeftMenu = () => {
+const CustomLeftMenu = ({ onClick }) => {
   /** react-flow 实例方法 */
   const { fitView, getEdges, getNodes, setNodes, setEdges } = useReactFlow();
 
@@ -143,7 +143,10 @@ const CustomLeftMenu = () => {
   return (
     <>
       <Panel position="top-left">
-        <div className="grid w-[200px] gap-4 rounded border-1 border-gray-200 bg-white p-3 shadow">
+        <div
+          className="border-1 grid w-[200px] gap-4 rounded border-gray-200 bg-white p-3 shadow"
+          onClick={onClick}
+        >
           {menuItems.map((item) => (
             <div key={item.name}>
               <div className="mb-2 text-sm font-bold">{item.label}</div>
@@ -196,7 +199,7 @@ const CustomLeftMenu = () => {
                 <div className="mb-2">节点列表</div>
                 <Textarea
                   spellCheck={false}
-                  className="max-h-[200px]"
+                  className="min-h-[200px]"
                   defaultValue={JSON.stringify(getNodes(), null, 2)}
                 />
               </div>
@@ -205,7 +208,7 @@ const CustomLeftMenu = () => {
                 <div className="mb-2">边列表</div>
                 <Textarea
                   spellCheck={false}
-                  className="max-h-[200px]"
+                  className="min-h-[200px]"
                   defaultValue={JSON.stringify(getEdges(), null, 2)}
                 />
               </div>
@@ -216,4 +219,4 @@ const CustomLeftMenu = () => {
     </>
   );
 };
-export default CustomLeftMenu;
+export default memo(CustomLeftMenu);

@@ -150,7 +150,7 @@ function App(props: ReactFlowProps) {
         )}
 
         {/* 自定义左侧菜单 */}
-        <CustomLeftMenu />
+        <CustomLeftMenu onClick={handleCloseContextMenu} />
 
         {/* 自定义右侧配置 */}
         {modalId && <CustomRightConfig nodeId={modalId} />}

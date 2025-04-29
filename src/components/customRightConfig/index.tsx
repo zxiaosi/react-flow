@@ -6,6 +6,12 @@ import { Panel, useReactFlow } from '@xyflow/react';
 const items = [
   { type: 'text', name: 'id', label: '唯一ID - id', disabled: true },
   {
+    type: 'text',
+    name: ['data', 'label'],
+    label: '文案 - data.label',
+    disabled: false,
+  },
+  {
     type: 'number',
     name: ['style', 'width'],
     label: '宽 - style.width',
@@ -39,7 +45,7 @@ const CustomModal = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId); // 获取节点数据
   if (!node?.style) node!.style = { ...node?.measured };
 
-  // console.log('node', node);
+  console.log('node', node);
 
   /** 节点数据变化事件 */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, item) => {
