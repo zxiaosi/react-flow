@@ -6,10 +6,12 @@ import {
 } from '@xyflow/react';
 import { useEffect, useState } from 'react';
 
-export function extractVerticesFromPath(
-  path: string,
-): { x: number; y: number }[] {
-  const vertices = [] as { x: number; y: number }[];
+type VerticesType = { x: number; y: number }[];
+
+type CustomEdgeProps = EdgeProps & { vertices?: VerticesType };
+
+function extractVerticesFromPath(path: string): VerticesType {
+  const vertices = [] as VerticesType;
   const commands = path.split(/(?=[A-Z])/); // 分割 SVG 命令
 
   let currentX = 0,
@@ -37,7 +39,7 @@ export function extractVerticesFromPath(
 }
 
 /** 自定义边 */
-function CustomEdge(props: EdgeProps) {
+function CustomEdge(props: CustomEdgeProps) {
   const {
     id,
     sourceX,
@@ -46,18 +48,18 @@ function CustomEdge(props: EdgeProps) {
     targetY,
     sourcePosition,
     targetPosition,
-    data,
+    vertices = [],
   } = props;
 
   const { setEdges } = useReactFlow();
   const [edgePath, setEdgePath] = useState<string>('');
 
   useEffect(() => {
-    if (data?.vertices || data?.vertices?.length > 0) {
+    if (vertices?.length > 0) {
       // 组合所有路径点（起点 + 拐点 + 终点）
       const points = [
         { x: sourceX, y: sourceY },
-        ...(data?.vertices || []), // 拐点
+        ...(vertices || []), // 拐点
         { x: targetX, y: targetY },
       ];
 
@@ -84,7 +86,7 @@ function CustomEdge(props: EdgeProps) {
       setEdgePath(newEdgePath); // 设置路径
 
       // 解析路径，获取拐点坐标
-      const vertices = extractVerticesFromPath(edgePath);
+      const vertices = extractVerticesFromPath(newEdgePath);
 
       // 设置边的拐点坐标
       setEdges((eds: any[]) => {
@@ -105,7 +107,7 @@ function CustomEdge(props: EdgeProps) {
     targetY,
     sourcePosition,
     targetPosition,
-    data?.vertices,
+    vertices,
   ]);
 
   return (
