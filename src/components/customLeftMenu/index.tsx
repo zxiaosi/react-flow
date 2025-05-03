@@ -168,6 +168,11 @@ const CustomLeftMenu = ({ onClick }) => {
       }
       case 'export': {
         setDialogOpen(true);
+
+        const nodes = getNodes(); // 获取节点数据
+        const edges = getEdges(); // 获取边数据
+        localStorage.setItem('nodes', JSON.stringify(nodes)); // 存储节点数据
+        localStorage.setItem('edges', JSON.stringify(edges)); // 存储边数据
         break;
       }
       case 'horizontal':
@@ -200,6 +205,18 @@ const CustomLeftMenu = ({ onClick }) => {
   /** 弹框打开事件 */
   const handleOpenChange = (open) => {
     if (!open) setDialogOpen(false);
+  };
+
+  /** 导入节点 */
+  const handleImport = () => {
+    const edges = localStorage.getItem('edges') || '[]'; // 获取边数据
+    const nodes = localStorage.getItem('nodes') || '[]'; // 获取节点数据
+
+    const newEdges = JSON.parse(edges); // 解析边数据
+    const newNodes = JSON.parse(nodes); // 解析节点数据
+
+    setEdges(newEdges); // 设置边数据
+    setNodes(newNodes); // 设置节点数据
   };
 
   return (
@@ -254,6 +271,8 @@ const CustomLeftMenu = ({ onClick }) => {
               </div>
             </div>
           ))}
+
+          <button onClick={handleImport}>导入</button>
         </div>
       </Panel>
 

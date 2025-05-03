@@ -3,6 +3,7 @@ import {
   Background,
   BackgroundVariant,
   Edge,
+  EdgeTypes,
   Node,
   ReactFlow,
   ReactFlowProps,
@@ -22,6 +23,7 @@ import useProjectConfig from '@/hooks/useProjectConfig';
 import { useCallback, useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
+import CustomEdge from '@/components/customEdge';
 import '@xyflow/react/dist/style.css'; // 引入样式
 
 /** 唯一id */
@@ -29,6 +31,14 @@ let id = 0;
 
 /** 生成唯一id */
 const getId = () => `node_${id++}`;
+
+/** 自定义节点类型 */
+const NODE_TYPES = {};
+
+/** 自定义边类型 */
+const EDGE_TYPES: EdgeTypes = {
+  customEdge: CustomEdge,
+};
 
 /**
  * 自定义拓扑
@@ -41,9 +51,11 @@ function App(props: ReactFlowProps) {
   const { screenToFlowPosition } = useReactFlow();
 
   /** 项目配置 */
-  const { showBg } = useProjectConfig(
+  const { showBg, lineTypeIdx, lineAnimated } = useProjectConfig(
     useShallow((state) => ({
       showBg: state.showBg,
+      lineTypeIdx: state.lineTypeIdx,
+      lineAnimated: state.lineAnimated,
     })),
   );
 
@@ -63,9 +75,16 @@ function App(props: ReactFlowProps) {
   const [contextMenu, setContextMenu] = useState({}); // 右键菜单
 
   /** 节点连线事件 */
-  const handleConnect = (params: any) =>
-    setEdges((eds) => addEdge(params, eds));
+  const handleConnect = (params: Edge) => {
+    const newEdge = {
+      ...params,
+      // type: LINE_TYPE[lineTypeIdx!].value,
+      type: 'customEdge',
+      animated: lineAnimated,
+    };
 
+    return setEdges((eds) => addEdge(newEdge, eds));
+  };
   /** 节点拖拽中事件 */
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault(); // 一定要写, 否则onDrop事件不会触发
@@ -131,6 +150,7 @@ function App(props: ReactFlowProps) {
     <div className="h-full w-full">
       <ReactFlow
         ref={ref}
+        edgeTypes={EDGE_TYPES}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
