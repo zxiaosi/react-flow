@@ -4,7 +4,7 @@ import {
   getSmoothStepPath,
   useReactFlow,
 } from '@xyflow/react';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 type VerticesType = { x: number; y: number }[];
 
@@ -91,24 +91,14 @@ function CustomEdge(props: CustomEdgeProps) {
       // 设置边的拐点坐标
       setEdges((eds: any[]) => {
         const newEds = eds.map((edge) => {
-          if (edge.id === id) {
-            return { ...edge, vertices };
-          }
+          if (edge?.id === id) return { ...edge, vertices };
+          else return edge;
         });
 
         return newEds;
       });
     }
-  }, [
-    id,
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
-    vertices,
-  ]);
+  }, [sourceX, sourceY, targetX, targetY, vertices]);
 
   return (
     <>
@@ -117,4 +107,4 @@ function CustomEdge(props: CustomEdgeProps) {
   );
 }
 
-export default CustomEdge;
+export default memo(CustomEdge);
