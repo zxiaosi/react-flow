@@ -55,6 +55,36 @@
           <ul class="icon_lists dib-box">
           
             <li class="dib">
+              <span class="icon iconfont">&#xe631;</span>
+                <div class="name">节点组</div>
+                <div class="code-name">&amp;#xe631;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe603;</span>
+                <div class="name">自定义节点</div>
+                <div class="code-name">&amp;#xe603;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe67b;</span>
+                <div class="name">复制</div>
+                <div class="code-name">&amp;#xe67b;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe604;</span>
+                <div class="name">自定义连接线</div>
+                <div class="code-name">&amp;#xe604;</div>
+              </li>
+          
+            <li class="dib">
+              <span class="icon iconfont">&#xe610;</span>
+                <div class="name">导入</div>
+                <div class="code-name">&amp;#xe610;</div>
+              </li>
+          
+            <li class="dib">
               <span class="icon iconfont">&#xe66d;</span>
                 <div class="name">折线</div>
                 <div class="code-name">&amp;#xe66d;</div>
@@ -92,14 +122,8 @@
           
             <li class="dib">
               <span class="icon iconfont">&#xe9b3;</span>
-                <div class="name">组</div>
+                <div class="name">自定义节点组</div>
                 <div class="code-name">&amp;#xe9b3;</div>
-              </li>
-          
-            <li class="dib">
-              <span class="icon iconfont">&#xe600;</span>
-                <div class="name">方块</div>
-                <div class="code-name">&amp;#xe600;</div>
               </li>
           
             <li class="dib">
@@ -110,7 +134,7 @@
           
             <li class="dib">
               <span class="icon iconfont">&#xe652;</span>
-                <div class="name">圆角方块</div>
+                <div class="name">默认节点</div>
                 <div class="code-name">&amp;#xe652;</div>
               </li>
           
@@ -118,12 +142,6 @@
               <span class="icon iconfont">&#xe60f;</span>
                 <div class="name">导出</div>
                 <div class="code-name">&amp;#xe60f;</div>
-              </li>
-          
-            <li class="dib">
-              <span class="icon iconfont">&#xe636;</span>
-                <div class="name">菱形</div>
-                <div class="code-name">&amp;#xe636;</div>
               </li>
           
             <li class="dib">
@@ -198,9 +216,9 @@
 <pre><code class="language-css"
 >@font-face {
   font-family: 'iconfont';
-  src: url('iconfont.woff2?t=1745938378080') format('woff2'),
-       url('iconfont.woff?t=1745938378080') format('woff'),
-       url('iconfont.ttf?t=1745938378080') format('truetype');
+  src: url('iconfont.woff2?t=1746377203604') format('woff2'),
+       url('iconfont.woff?t=1746377203604') format('woff'),
+       url('iconfont.ttf?t=1746377203604') format('truetype');
 }
 </code></pre>
           <h3 id="-iconfont-">第二步：定义使用 iconfont 的样式</h3>
@@ -225,6 +243,51 @@
       </div>
       <div class="content font-class">
         <ul class="icon_lists dib-box">
+          
+          <li class="dib">
+            <span class="icon iconfont icon-group-node"></span>
+            <div class="name">
+              节点组
+            </div>
+            <div class="code-name">.icon-group-node
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-custom-node"></span>
+            <div class="name">
+              自定义节点
+            </div>
+            <div class="code-name">.icon-custom-node
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-copy"></span>
+            <div class="name">
+              复制
+            </div>
+            <div class="code-name">.icon-copy
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-custom-edge"></span>
+            <div class="name">
+              自定义连接线
+            </div>
+            <div class="code-name">.icon-custom-edge
+            </div>
+          </li>
+          
+          <li class="dib">
+            <span class="icon iconfont icon-import"></span>
+            <div class="name">
+              导入
+            </div>
+            <div class="code-name">.icon-import
+            </div>
+          </li>
           
           <li class="dib">
             <span class="icon iconfont icon-step"></span>
@@ -281,20 +344,11 @@
           </li>
           
           <li class="dib">
-            <span class="icon iconfont icon-group"></span>
+            <span class="icon iconfont icon-custom-group"></span>
             <div class="name">
-              组
+              自定义节点组
             </div>
-            <div class="code-name">.icon-group
-            </div>
-          </li>
-          
-          <li class="dib">
-            <span class="icon iconfont icon-square"></span>
-            <div class="name">
-              方块
-            </div>
-            <div class="code-name">.icon-square
+            <div class="code-name">.icon-custom-group
             </div>
           </li>
           
@@ -308,11 +362,11 @@
           </li>
           
           <li class="dib">
-            <span class="icon iconfont icon-round-square"></span>
+            <span class="icon iconfont icon-default-node"></span>
             <div class="name">
-              圆角方块
+              默认节点
             </div>
-            <div class="code-name">.icon-round-square
+            <div class="code-name">.icon-default-node
             </div>
           </li>
           
@@ -322,15 +376,6 @@
               导出
             </div>
             <div class="code-name">.icon-export
-            </div>
-          </li>
-          
-          <li class="dib">
-            <span class="icon iconfont icon-lozenge"></span>
-            <div class="name">
-              菱形
-            </div>
-            <div class="code-name">.icon-lozenge
             </div>
           </li>
           
@@ -444,6 +489,46 @@
           
             <li class="dib">
                 <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-group-node"></use>
+                </svg>
+                <div class="name">节点组</div>
+                <div class="code-name">#icon-group-node</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-custom-node"></use>
+                </svg>
+                <div class="name">自定义节点</div>
+                <div class="code-name">#icon-custom-node</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-copy"></use>
+                </svg>
+                <div class="name">复制</div>
+                <div class="code-name">#icon-copy</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-custom-edge"></use>
+                </svg>
+                <div class="name">自定义连接线</div>
+                <div class="code-name">#icon-custom-edge</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#icon-import"></use>
+                </svg>
+                <div class="name">导入</div>
+                <div class="code-name">#icon-import</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
                   <use xlink:href="#icon-step"></use>
                 </svg>
                 <div class="name">折线</div>
@@ -492,18 +577,10 @@
           
             <li class="dib">
                 <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-group"></use>
+                  <use xlink:href="#icon-custom-group"></use>
                 </svg>
-                <div class="name">组</div>
-                <div class="code-name">#icon-group</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-square"></use>
-                </svg>
-                <div class="name">方块</div>
-                <div class="code-name">#icon-square</div>
+                <div class="name">自定义节点组</div>
+                <div class="code-name">#icon-custom-group</div>
             </li>
           
             <li class="dib">
@@ -516,10 +593,10 @@
           
             <li class="dib">
                 <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-round-square"></use>
+                  <use xlink:href="#icon-default-node"></use>
                 </svg>
-                <div class="name">圆角方块</div>
-                <div class="code-name">#icon-round-square</div>
+                <div class="name">默认节点</div>
+                <div class="code-name">#icon-default-node</div>
             </li>
           
             <li class="dib">
@@ -528,14 +605,6 @@
                 </svg>
                 <div class="name">导出</div>
                 <div class="code-name">#icon-export</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#icon-lozenge"></use>
-                </svg>
-                <div class="name">菱形</div>
-                <div class="code-name">#icon-lozenge</div>
             </li>
           
             <li class="dib">

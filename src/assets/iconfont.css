@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4901067 */
-  src: url('iconfont.woff2?t=1745938378080') format('woff2'),
-       url('iconfont.woff?t=1745938378080') format('woff'),
-       url('iconfont.ttf?t=1745938378080') format('truetype');
+  src: url('iconfont.woff2?t=1746377203604') format('woff2'),
+       url('iconfont.woff?t=1746377203604') format('woff'),
+       url('iconfont.ttf?t=1746377203604') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-group-node:before {
+  content: "\e631";
+}
+
+.icon-custom-node:before {
+  content: "\e603";
+}
+
+.icon-copy:before {
+  content: "\e67b";
+}
+
+.icon-custom-edge:before {
+  content: "\e604";
+}
+
+.icon-import:before {
+  content: "\e610";
 }
 
 .icon-step:before {
@@ -37,28 +57,20 @@
   content: "\e6bb";
 }
 
-.icon-group:before {
+.icon-custom-group:before {
   content: "\e9b3";
-}
-
-.icon-square:before {
-  content: "\e600";
 }
 
 .icon-horizontal:before {
   content: "\e601";
 }
 
-.icon-round-square:before {
+.icon-default-node:before {
   content: "\e652";
 }
 
 .icon-export:before {
   content: "\e60f";
-}
-
-.icon-lozenge:before {
-  content: "\e636";
 }
 
 .icon-fit-view:before {

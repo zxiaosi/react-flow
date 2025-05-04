@@ -1,4 +1,4 @@
-import useNodeConfig from '@/hooks/useNodeConfig';
+import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 import { useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
@@ -14,9 +14,9 @@ const CustomContextMenu = ({ id, top, left, right, bottom, ...props }: any) => {
   const { setNodes, setEdges } = useReactFlow();
 
   /** 节点配置 */
-  const { onChangeModalId } = useNodeConfig(
+  const { onChangeRecord } = useRightSideBarConfig(
     useShallow((state) => ({
-      onChangeModalId: state.onChangeModalId,
+      onChangeRecord: state.onChangeRecord,
     })),
   );
 
@@ -24,7 +24,7 @@ const CustomContextMenu = ({ id, top, left, right, bottom, ...props }: any) => {
   const handleClick = (item) => {
     switch (item.key) {
       case 'detail':
-        onChangeModalId?.(id); // 显示弹框
+        onChangeRecord?.(id); // 显示弹框
         break;
       case 'delete':
         // 删除节点
@@ -33,7 +33,7 @@ const CustomContextMenu = ({ id, top, left, right, bottom, ...props }: any) => {
         setEdges((eds) =>
           eds.filter((edge) => edge.source !== id && edge.target !== id),
         );
-        onChangeModalId?.(''); // 隐藏弹框
+        onChangeRecord?.(undefined); // 隐藏弹框
         break;
       default:
         break;
@@ -43,7 +43,7 @@ const CustomContextMenu = ({ id, top, left, right, bottom, ...props }: any) => {
   return (
     <div
       style={{ top, left }}
-      className="absolute z-10 rounded border-1 bg-white text-sm shadow"
+      className="border-1 absolute z-10 rounded bg-white text-sm shadow"
       {...props}
     >
       {menuItem.map((item) => {

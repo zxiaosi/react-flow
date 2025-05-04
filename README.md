@@ -6,4 +6,4 @@
 
 ## [Shadcn UI](https://ui.shadcn.com/docs) `v2.3.0`
 
-## [Icon](https://at.alicdn.com/t/c/font_4901067_hlt8i2tl7u4.js)
+## [Icon](https://at.alicdn.com/t/c/font_4901067_qstjgmdi25q.js)

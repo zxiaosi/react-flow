@@ -15,16 +15,17 @@ import {
 
 import {
   CustomContextMenu,
-  CustomLeftMenu,
-  CustomRightConfig,
+  CustomLeftSidebar,
+  CustomRightSidebar,
 } from '@/components';
 import useNodeConfig from '@/hooks/useNodeConfig';
-import useProjectConfig from '@/hooks/useProjectConfig';
 import { useCallback, useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 import CustomEdge from '@/components/customEdge';
 import '@xyflow/react/dist/style.css'; // 引入样式
+import useEdgeConfig from './hooks/useEdgeConfig';
+import useRightSideBarConfig from './hooks/useRightSideBarConfig';
 
 /** 唯一id */
 let id = 0;
@@ -47,24 +48,28 @@ const EDGE_TYPES: EdgeTypes = {
  * - dagrejs/dagre v1.1.3 版本 可以解决上面问题
  */
 function App(props: ReactFlowProps) {
-  /** react-flow 实例方法 */
   const { screenToFlowPosition } = useReactFlow();
 
-  /** 项目配置 */
-  const { showBg, lineTypeIdx, lineAnimated } = useProjectConfig(
+  /** 连接线配置 */
+  const { edgeType, animated } = useEdgeConfig(
     useShallow((state) => ({
-      showBg: state.showBg,
-      lineTypeIdx: state.lineTypeIdx,
-      lineAnimated: state.lineAnimated,
+      animated: state.animated,
+      edgeType: state.edgeType,
     })),
   );
 
   /** 节点配置 */
-  const { drageNodeData, modalId, onChangeModalId } = useNodeConfig(
+  const { drageNodeData } = useNodeConfig(
     useShallow((state) => ({
       drageNodeData: state.drageNodeData,
-      modalId: state.modalId,
-      onChangeModalId: state.onChangeModalId,
+    })),
+  );
+
+  /** 右侧侧边栏配置 */
+  const { record, onChangeRecord } = useRightSideBarConfig(
+    useShallow((state) => ({
+      record: state.record,
+      onChangeRecord: state.onChangeRecord,
     })),
   );
 
@@ -76,13 +81,7 @@ function App(props: ReactFlowProps) {
 
   /** 节点连线事件 */
   const handleConnect = (params: Edge) => {
-    const newEdge = {
-      ...params,
-      // type: LINE_TYPE[lineTypeIdx!].value,
-      type: 'customEdge',
-      animated: lineAnimated,
-    };
-
+    const newEdge = { ...params, type: edgeType, animated };
     return setEdges((eds) => addEdge(newEdge, eds));
   };
   /** 节点拖拽中事件 */
@@ -143,8 +142,8 @@ function App(props: ReactFlowProps) {
   const handlePaneClick = useCallback(() => {
     console.log('handlePaneClick');
     handleCloseContextMenu();
-    onChangeModalId?.(''); // 关闭弹框
-  }, [handleCloseContextMenu, onChangeModalId]);
+    onChangeRecord?.(undefined); // 关闭弹框
+  }, [handleCloseContextMenu, onChangeRecord]);
 
   return (
     <div className="h-full w-full">
@@ -165,15 +164,13 @@ function App(props: ReactFlowProps) {
         {...props}
       >
         {/* 背景 */}
-        {showBg && (
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        )}
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
 
-        {/* 自定义左侧菜单 */}
-        <CustomLeftMenu onClick={handleCloseContextMenu} />
+        {/* 自定义左侧侧边栏 */}
+        <CustomLeftSidebar onClick={handleCloseContextMenu} />
 
-        {/* 自定义右侧配置 */}
-        {modalId && <CustomRightConfig nodeId={modalId} />}
+        {/* 自定义右侧侧边栏 */}
+        {record && <CustomRightSidebar record={record} />}
 
         {/* 自定义右键菜单 */}
         {Object.keys(contextMenu).length > 0 && (

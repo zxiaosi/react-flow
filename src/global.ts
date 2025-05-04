@@ -4,10 +4,8 @@ export const THEME_TYPE = [
   { value: 'dark', icon: '&#xe634;' },
 ];
 
-/** 线段类型 */
-export const LINE_TYPE = [
-  { value: 'straight', icon: '&#xe6bb;' },
-  { value: 'step', icon: '&#xe66d;' },
-  { value: 'smoothstep', icon: '&#xec36;' },
-  { value: 'bezier', icon: '&#xe6a9;' },
+/** 算法类型 */
+export const ALGORITHM_TYPE = [
+  { label: 'Dagre', value: 'dagre' },
+  { label: 'Elkjs', value: 'elkjs', disabled: true },
 ];

@@ -1,4 +1,4 @@
 export { default as CustomContextMenu } from './customContextMenu';
 export { default as customEdge } from './customEdge';
-export { default as CustomLeftMenu } from './customLeftMenu';
-export { default as CustomRightConfig } from './customRightConfig';
+export { default as CustomLeftSidebar } from './customLeftSidebar';
+export { default as CustomRightSidebar } from './customRightSidebar';
