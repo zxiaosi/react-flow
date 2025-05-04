@@ -1,12 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
 import { Edge, Node, useReactFlow } from '@xyflow/react';
+import { Input, Modal } from 'antd';
 import { memo, useRef, useState } from 'react';
+import './index.less';
 
 /** 菜单数据 */
 const menuItems = [
@@ -29,7 +24,7 @@ const CustomProjectMenu = () => {
   const nodesRef = useRef<Node[]>([]); // 节点数据
   const edgesRef = useRef<Edge[]>([]); // 连接线数据
 
-  const [dialogOpen, setDialogOpen] = useState(false); // 弹框是否打开
+  const [open, setOpen] = useState(false); // 弹框是否打开
 
   /** 点击事件 */
   const handleClick = (item) => {
@@ -42,8 +37,16 @@ const CustomProjectMenu = () => {
         setEdges([]);
         break;
       }
+      case 'import': {
+        const nodes = localStorage.getItem('nodes') || '[]'; // 获取节点数据
+        const edges = localStorage.getItem('edges') || '[]'; // 获取连接线数据
+
+        setNodes(JSON.parse(nodes));
+        setEdges(JSON.parse(edges));
+        break;
+      }
       case 'export': {
-        setDialogOpen(true);
+        setOpen(true);
 
         const nodes = getNodes(); // 获取节点数据
         const edges = getEdges(); // 获取连接线数据
@@ -59,64 +62,64 @@ const CustomProjectMenu = () => {
     }
   };
 
-  /** 弹框打开事件 */
-  const handleOpenChange = (open) => {
-    if (!open) setDialogOpen(false);
+  /** 弹框关闭事件 */
+  const handleCancel = () => {
+    setOpen(false);
   };
 
   return (
     <>
-      {menuItems.map((item) => (
-        <div key={item.name}>
-          <div className="mb-2 text-center text-sm font-bold">{item.label}</div>
-          <div className="flex flex-wrap gap-2">
-            {item.children.map((child: any) => {
-              const { name, label, icon } = child;
-              return (
-                <div
-                  key={name}
-                  className={`h-[33px] w-[33px] cursor-pointer rounded bg-gray-100 caret-transparent hover:bg-gray-200`}
-                  draggable={item.name === 'node'}
-                  onClick={() => handleClick(child)}
-                >
-                  <span
-                    title={label}
-                    className={`iconfont flex h-full w-full items-center justify-center`}
-                    dangerouslySetInnerHTML={{ __html: icon || '' }}
-                  ></span>
-                </div>
-              );
-            })}
+      <div className="custom-project-menu">
+        {menuItems.map((item) => (
+          <div key={item.name}>
+            <div className="custom-left-menu-title">{item.label}</div>
+            <div className="custom-left-menu-content">
+              {item.children.map((child: any) => {
+                const { name, label, icon } = child;
+                return (
+                  <div
+                    key={name}
+                    className={`custom-left-menu-content-item`}
+                    onClick={() => handleClick(child)}
+                  >
+                    <span
+                      title={label}
+                      className={`iconfont`}
+                      dangerouslySetInnerHTML={{ __html: icon || '' }}
+                    ></span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Modal
+        title={'导出'}
+        footer={null}
+        open={open}
+        onCancel={handleCancel}
+        wrapClassName="custom-project-modal"
+      >
+        <div className="class-project-modal-content">
+          <div className="class-project-modal-content-item">
+            <div>节点列表</div>
+            <Input.TextArea
+              rows={6}
+              defaultValue={JSON.stringify(nodesRef.current, null, 2)}
+            />
+          </div>
+
+          <div className="class-project-modal-content-item">
+            <div>边列表</div>
+            <Input.TextArea
+              rows={6}
+              defaultValue={JSON.stringify(edgesRef.current, null, 2)}
+            />
           </div>
         </div>
-      ))}
-
-      <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>导出</DialogTitle>
-            <div className="grid gap-4">
-              <div>
-                <div className="mb-2">节点列表</div>
-                <Textarea
-                  spellCheck={false}
-                  className="min-h-[200px]"
-                  defaultValue={JSON.stringify(nodesRef.current, null, 2)}
-                />
-              </div>
-
-              <div>
-                <div className="mb-2">边列表</div>
-                <Textarea
-                  spellCheck={false}
-                  className="min-h-[200px]"
-                  defaultValue={JSON.stringify(edgesRef.current, null, 2)}
-                />
-              </div>
-            </div>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      </Modal>
     </>
   );
 };

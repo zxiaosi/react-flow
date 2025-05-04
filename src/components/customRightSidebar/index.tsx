@@ -1,4 +1,5 @@
 import { Panel } from '@xyflow/react';
+import './index.less';
 
 /** 弹框配置 */
 const items = [
@@ -36,7 +37,7 @@ const items = [
 ];
 
 /** 自定义右侧侧边栏 */
-const customRightSidebar = ({ record }: any) => {
+const CustomRightSidebar = ({ record }: any) => {
   // const { getNode, updateNode } = useReactFlow();
 
   // const node = getNode(nodeId); // 获取节点数据
@@ -55,7 +56,7 @@ const customRightSidebar = ({ record }: any) => {
 
   return (
     <Panel position="top-right">
-      <div className="grid w-[200px] gap-y-3 rounded bg-white p-3 shadow">
+      <div className="custom-right-sidebar">
         234
         {/* {items.map((item) => {
           const { type, name, label, disabled } = item;
@@ -77,4 +78,4 @@ const customRightSidebar = ({ record }: any) => {
   );
 };
 
-export default customRightSidebar;
+export default CustomRightSidebar;

@@ -2,6 +2,7 @@ import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 import { useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
+import './index.less';
 
 const menuItem = [
   { key: 'detail', label: '详情' },
@@ -41,16 +42,12 @@ const CustomContextMenu = ({ id, top, left, right, bottom, ...props }: any) => {
   };
 
   return (
-    <div
-      style={{ top, left }}
-      className="border-1 absolute z-10 rounded bg-white text-sm shadow"
-      {...props}
-    >
+    <div style={{ top, left }} className="custom-context-menu" {...props}>
       {menuItem.map((item) => {
         return (
           <div
             key={item.key}
-            className="cursor-pointer px-2 py-1 hover:bg-gray-100"
+            className="custom-context-menu-item"
             onClick={() => handleClick(item)}
           >
             {item.label}

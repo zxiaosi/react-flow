@@ -1,14 +1,11 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { ALGORITHM_TYPE } from '@/global';
+import useLayoutConfig from '@/hooks/useLayoutConfig';
 import { getLayoutedElementsUtil } from '@/utils';
 import { useReactFlow } from '@xyflow/react';
+import { Select } from 'antd';
 import { memo } from 'react';
+import { useShallow } from 'zustand/shallow';
+import './index.less';
 
 /** 菜单数据 */
 const menuItems = [
@@ -27,7 +24,21 @@ const menuItems = [
 const CustomLayoutMenu = () => {
   const { fitView, setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
-  /** 点击事件 */
+  const { algorithm, onChangeAlgorithm, onChangeDirection } = useLayoutConfig(
+    useShallow((state) => ({
+      algorithm: state.algorithm,
+      onChangeAlgorithm: state.onChangeAlgorithm,
+      onChangeDirection: state.onChangeDirection,
+    })),
+  );
+
+  /** 算法选择事件 */
+  const handleChangeAlgorithm = (value: string) => {
+    onChangeAlgorithm?.(value);
+    onChangeDirection?.(undefined);
+  };
+
+  /** 方向点击事件 */
   const handleClick = (item) => {
     switch (item.name) {
       case 'horizontal':
@@ -42,6 +53,7 @@ const CustomLayoutMenu = () => {
         setNodes(layoutNodes);
         setEdges(layoutEdges);
         fitView();
+        onChangeDirection?.(direction);
         break;
       }
       case 'default':
@@ -50,36 +62,30 @@ const CustomLayoutMenu = () => {
   };
 
   return (
-    <>
+    <div className="custom-layout-menu">
       {menuItems.map((item) => (
         <div key={item.name}>
-          <div className="mb-2 text-center text-sm font-bold">{item.label}</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="custom-left-menu-title">{item.label}</div>
+          <div className="custom-left-menu-content">
             {item.children.map((child: any) => {
               const { name, label, icon, type = '', options = [] } = child;
               return type === 'select' ? (
-                <Select key={name} defaultValue={options?.[0]?.value}>
-                  <SelectTrigger className="h-[33px] w-[74px]">
-                    <SelectValue placeholder="Theme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {options.map((option: any) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  key={name}
+                  options={options}
+                  value={algorithm}
+                  onChange={handleChangeAlgorithm}
+                  className="custom-left-menu-content-select"
+                />
               ) : (
                 <div
                   key={name}
-                  className={`h-[33px] w-[33px] cursor-pointer rounded bg-gray-100 text-gray-600 caret-transparent hover:bg-gray-200`}
-                  draggable={item.name === 'node'}
+                  className={`custom-left-menu-content-item`}
                   onClick={() => handleClick(child)}
                 >
                   <span
                     title={label}
-                    className={`iconfont flex h-full w-full items-center justify-center`}
+                    className={`iconfont`}
                     dangerouslySetInnerHTML={{ __html: icon || '' }}
                   ></span>
                 </div>
@@ -88,7 +94,7 @@ const CustomLayoutMenu = () => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -146,7 +146,7 @@ function App(props: ReactFlowProps) {
   }, [handleCloseContextMenu, onChangeRecord]);
 
   return (
-    <div className="h-full w-full">
+    <div className="app">
       <ReactFlow
         ref={ref}
         edgeTypes={EDGE_TYPES}

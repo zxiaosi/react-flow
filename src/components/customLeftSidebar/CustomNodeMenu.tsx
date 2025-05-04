@@ -1,6 +1,7 @@
 import useNodeConfig from '@/hooks/useNodeConfig';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
+import './index.less';
 
 /** 菜单数据 */
 const menuItems = [
@@ -31,23 +32,23 @@ const CustomNodeMenu = () => {
   };
 
   return (
-    <>
+    <div className="custom-node-menu">
       {menuItems.map((item) => (
         <div key={item.name}>
-          <div className="mb-2 text-center text-sm font-bold">{item.label}</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="custom-left-menu-title">{item.label}</div>
+          <div className="custom-left-menu-content">
             {item.children.map((child: any) => {
               const { name, label, icon } = child;
               return (
                 <div
+                  draggable
                   key={name}
-                  className={`h-[33px] w-[33px] cursor-move rounded bg-gray-100 caret-transparent hover:bg-gray-200`}
-                  draggable={item.name === 'node'}
+                  className={`custom-left-menu-content-item`}
                   onDragStart={(e) => handleDragStart(e, child)}
                 >
                   <span
                     title={label}
-                    className={`iconfont flex h-full w-full items-center justify-center`}
+                    className={`iconfont`}
                     dangerouslySetInnerHTML={{ __html: icon || '' }}
                   ></span>
                 </div>
@@ -56,7 +57,7 @@ const CustomNodeMenu = () => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
