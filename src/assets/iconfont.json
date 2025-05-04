@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "13693762",
+      "name": "剪切板",
+      "font_class": "clipboard",
+      "unicode": "e8c9",
+      "unicode_decimal": 59593
+    },
+    {
       "icon_id": "42336083",
       "name": "节点组",
       "font_class": "group-node",

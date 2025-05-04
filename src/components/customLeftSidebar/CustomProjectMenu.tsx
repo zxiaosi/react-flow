@@ -1,6 +1,8 @@
-import { Edge, Node, useReactFlow } from '@xyflow/react';
-import { Input, Modal } from 'antd';
-import { memo, useRef, useState } from 'react';
+import { textToJsonAndDownloadUtil } from '@/utils';
+import { useReactFlow } from '@xyflow/react';
+import { Button, Form, FormInstance, Input, message, Modal } from 'antd';
+import copy from 'copy-to-clipboard';
+import { memo, useEffect, useRef, useState } from 'react';
 import './index.less';
 
 /** 菜单数据 */
@@ -15,46 +17,134 @@ const menuItems = [
       { name: 'export', label: '导出', icon: '&#xe60f;' },
     ],
   },
-];
+] satisfies MenuItems[];
+
+/** 导入组件 */
+const CustomImport = () => {
+  const { setNodes, setEdges } = useReactFlow();
+
+  useEffect(() => {
+    const nodes = localStorage.getItem('nodes') || '[]'; // 获取节点数据
+    const edges = localStorage.getItem('edges') || '[]'; // 获取连接线数据
+
+    setNodes(JSON.parse(nodes));
+    setEdges(JSON.parse(edges));
+  }, []);
+
+  return <></>;
+};
+
+/** 导出组件 */
+const CustomExport = () => {
+  const { getNodes, getEdges } = useReactFlow();
+
+  const formRef = useRef<FormInstance>(null); // 表单实例
+
+  useEffect(() => {
+    const nodes = getNodes(); // 获取节点数据
+    const edges = getEdges(); // 获取连接线数据
+
+    // 设置表单值
+    formRef.current?.setFieldsValue({
+      nodes: JSON.stringify(nodes, null, 2),
+      edges: JSON.stringify(edges, null, 2),
+    });
+  }, []);
+
+  /** 保存到本地缓存 */
+  const handleSave = () => {
+    const values = formRef?.current?.getFieldsValue?.();
+    localStorage.setItem('nodes', values?.nodes);
+    localStorage.setItem('edges', values?.edges);
+  };
+
+  /** 下载文件 */
+  const handleDownload = () => {
+    const values = formRef?.current?.getFieldsValue?.();
+    const text = JSON.stringify({
+      nodes: JSON.parse(values?.nodes || '[]'),
+      edges: JSON.parse(values?.edges || '[]'),
+    });
+
+    textToJsonAndDownloadUtil(text, 'tuopu');
+  };
+
+  /** 复制完成事件 */
+  const handleCopy = (type: 'nodes' | 'edges') => {
+    const values = formRef?.current?.getFieldsValue?.();
+    const result = copy(values?.[type]);
+    if (result) message.success('复制成功');
+    else message.error('复制失败');
+  };
+
+  return (
+    <Form ref={formRef}>
+      <div className="class-project-modal-export">
+        <div className="class-project-modal-export-item">
+          <div className="class-project-modal-export-item-title">
+            <span>节点列表</span>
+            <span className="iconfont" onClick={() => handleCopy('nodes')}>
+              &#xe8c9;
+            </span>
+          </div>
+
+          <Form.Item name={'nodes'} noStyle>
+            <Input.TextArea rows={6} />
+          </Form.Item>
+        </div>
+
+        <div className="class-project-modal-export-item">
+          <div className="class-project-modal-export-item-title">
+            <span>连接线列表</span>
+            <span className="iconfont" onClick={() => handleCopy('edges')}>
+              &#xe8c9;
+            </span>
+          </div>
+
+          <Form.Item name={'edges'} noStyle>
+            <Input.TextArea rows={6} />
+          </Form.Item>
+        </div>
+
+        <div className="class-project-modal-export-btn">
+          <Button type="primary" block onClick={handleSave}>
+            保存到本地缓存
+          </Button>
+          <Button type="primary" block onClick={handleDownload}>
+            下载文件
+          </Button>
+        </div>
+      </div>
+    </Form>
+  );
+};
 
 /** 左侧菜单-项目 */
 const CustomProjectMenu = () => {
-  const { fitView, setNodes, setEdges, getNodes, getEdges } = useReactFlow();
+  const { fitView, setNodes, setEdges } = useReactFlow();
 
-  const nodesRef = useRef<Node[]>([]); // 节点数据
-  const edgesRef = useRef<Edge[]>([]); // 连接线数据
-
-  const [open, setOpen] = useState(false); // 弹框是否打开
+  const [modalType, setModalType] = useState<'import' | 'export' | ''>(''); // 弹框类型
 
   /** 点击事件 */
-  const handleClick = (item) => {
-    switch (item.name) {
-      case 'fitView':
+  const handleClick = (item: MenuItems) => {
+    const { name } = item;
+
+    switch (name) {
+      case 'fitView': {
         fitView();
         break;
+      }
       case 'clear': {
         setNodes([]);
         setEdges([]);
         break;
       }
       case 'import': {
-        const nodes = localStorage.getItem('nodes') || '[]'; // 获取节点数据
-        const edges = localStorage.getItem('edges') || '[]'; // 获取连接线数据
-
-        setNodes(JSON.parse(nodes));
-        setEdges(JSON.parse(edges));
+        setModalType('import');
         break;
       }
       case 'export': {
-        setOpen(true);
-
-        const nodes = getNodes(); // 获取节点数据
-        const edges = getEdges(); // 获取连接线数据
-        nodesRef.current = nodes; // 存储节点数据
-        edgesRef.current = edges; // 存储连接线数据
-
-        localStorage.setItem('nodes', JSON.stringify(nodes)); // 存储节点数据
-        localStorage.setItem('edges', JSON.stringify(edges)); // 存储连接线数据
+        setModalType('export');
         break;
       }
       case 'default':
@@ -64,7 +154,7 @@ const CustomProjectMenu = () => {
 
   /** 弹框关闭事件 */
   const handleCancel = () => {
-    setOpen(false);
+    setModalType('');
   };
 
   return (
@@ -96,29 +186,16 @@ const CustomProjectMenu = () => {
       </div>
 
       <Modal
-        title={'导出'}
+        open={modalType !== ''}
+        title={modalType === 'import' ? '导入项目' : '导出项目'}
         footer={null}
-        open={open}
+        destroyOnClose={true}
         onCancel={handleCancel}
         wrapClassName="custom-project-modal"
       >
-        <div className="class-project-modal-content">
-          <div className="class-project-modal-content-item">
-            <div>节点列表</div>
-            <Input.TextArea
-              rows={6}
-              defaultValue={JSON.stringify(nodesRef.current, null, 2)}
-            />
-          </div>
+        {modalType === 'import' && <CustomImport />}
 
-          <div className="class-project-modal-content-item">
-            <div>边列表</div>
-            <Input.TextArea
-              rows={6}
-              defaultValue={JSON.stringify(edgesRef.current, null, 2)}
-            />
-          </div>
-        </div>
+        {modalType === 'export' && <CustomExport />}
       </Modal>
     </>
   );

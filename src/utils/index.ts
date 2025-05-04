@@ -134,3 +134,48 @@ export function setValueByPathUtil(
 
   return current;
 }
+
+/**
+ * 将文本转换为JSON并下载
+ * @param {string} text - 要转换的文本
+ * @param {string} filename - 下载的文件名（不带.json扩展名）
+ */
+export function textToJsonAndDownloadUtil(text = '', filename = 'data') {
+  try {
+    // 1. 将文本转换为JSON对象
+    // 如果文本已经是JSON格式，直接解析
+    // 如果不是，则作为纯文本处理
+    let jsonObj;
+    try {
+      jsonObj = JSON.parse(text);
+    } catch (e) {
+      // 如果不是有效的JSON，则作为纯文本处理
+      jsonObj = { content: text };
+    }
+
+    // 2. 将JSON对象转换为字符串，格式化输出
+    const jsonString = JSON.stringify(jsonObj, null, 2);
+
+    // 3. 创建Blob对象
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    // 4. 创建下载链接
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.json`;
+
+    // 5. 触发下载
+    document.body.appendChild(a);
+    a.click();
+
+    // 6. 清理
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  } catch (error) {
+    console.error('转换或下载失败:', error);
+    alert('转换或下载失败，请查看控制台获取详细信息');
+  }
+}

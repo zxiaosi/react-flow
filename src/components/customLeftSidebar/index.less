@@ -64,14 +64,30 @@
 }
 
 .custom-project-modal {
-  .class-project-modal-content {
+  .class-project-modal-export {
     display: grid;
     gap: 16px;
 
-    .class-project-modal-content-item {
-      & > div {
-        margin-bottom: 8px;
+    .class-project-modal-export-item {
+      display: grid;
+      gap: 8px;
+
+      .class-project-modal-export-item-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &>span:last-child{
+          cursor: pointer;
+          caret-color: transparent;
+        }
       }
+    }
+
+    .class-project-modal-export-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
   }
 }
