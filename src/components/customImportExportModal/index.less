@@ -1,0 +1,35 @@
+.custom-project-modal {
+  .class-project-modal-content {
+    display: grid;
+    gap: 16px;
+
+    .class-project-modal-content-item {
+      display: grid;
+      gap: 8px;
+
+      .class-project-modal-content-item-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & > span:last-child {
+          cursor: pointer;
+          caret-color: transparent;
+        }
+      }
+    }
+
+    .class-project-modal-content-btnGroup {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .ant-btn,
+      .ant-upload-wrapper,
+      .ant-upload-select {
+        flex: 1;
+        width: 100%;
+      }
+    }
+  }
+}
