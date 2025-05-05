@@ -75,7 +75,7 @@ const CustomEdgeMenu = () => {
                   className={`custom-left-menu-content-item`}
                   style={{
                     opacity:
-                      name === 'animation' || edgeType === name ? 1 : 0.5,
+                      name === 'animation' || edgeType === name ? 1 : 0.3,
                   }}
                   onClick={() => handleClick(child)}
                 >

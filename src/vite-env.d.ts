@@ -14,3 +14,18 @@ interface MenuItems {
   /** 配置项 */
   options?: any[];
 }
+
+interface ContextMenu {
+  /** 节点/连接线id */
+  id: string | number;
+  /** 节点 或者 连接线 */
+  type: 'node' | 'edge';
+  /** 上间距 */
+  top: any;
+  /** 左间距 */
+  left: any;
+  /** 右间距 */
+  right: any;
+  /** 下间距 */
+  bottom: any;
+}

@@ -3,6 +3,8 @@ import { create } from 'zustand';
 interface Record {
   /** 类型 */
   type: 'node' | 'edge';
+  /** 节点/连接线id */
+  id: string | number;
 }
 
 interface Props {

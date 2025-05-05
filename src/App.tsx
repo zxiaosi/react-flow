@@ -2,6 +2,7 @@ import {
   addEdge,
   Background,
   BackgroundVariant,
+  Connection,
   Edge,
   EdgeTypes,
   Node,
@@ -50,18 +51,18 @@ const EDGE_TYPES: EdgeTypes = {
 function App(props: ReactFlowProps) {
   const { screenToFlowPosition } = useReactFlow();
 
+  /** 节点配置 */
+  const { drageNodeData } = useNodeConfig(
+    useShallow((state) => ({
+      drageNodeData: state.drageNodeData,
+    })),
+  );
+
   /** 连接线配置 */
   const { edgeType, animated } = useEdgeConfig(
     useShallow((state) => ({
       animated: state.animated,
       edgeType: state.edgeType,
-    })),
-  );
-
-  /** 节点配置 */
-  const { drageNodeData } = useNodeConfig(
-    useShallow((state) => ({
-      drageNodeData: state.drageNodeData,
     })),
   );
 
@@ -77,73 +78,78 @@ function App(props: ReactFlowProps) {
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]); // 节点
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]); // 边
-  const [contextMenu, setContextMenu] = useState({}); // 右键菜单
+  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null); // 右键菜单
 
   /** 节点连线事件 */
-  const handleConnect = (params: Edge) => {
+  const handleConnect = (params: Connection) => {
     const newEdge = { ...params, type: edgeType, animated };
     return setEdges((eds) => addEdge(newEdge, eds));
   };
+
   /** 节点拖拽中事件 */
-  const handleDragOver = useCallback((event: React.DragEvent) => {
+  const handleDragOver = (event: React.DragEvent) => {
     event.preventDefault(); // 一定要写, 否则onDrop事件不会触发
-  }, []);
+  };
 
   /** 节点拖拽事件 */
-  const handleDrop = useCallback(
-    (event: React.DragEvent) => {
-      event.preventDefault();
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
 
-      if (!drageNodeData) return;
+    if (!drageNodeData) return;
 
-      const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-      const id = getId();
-      const type = drageNodeData?.name;
-      const newNode = { id, type, position, data: { label: `${type} ${id}` } };
+    const position = screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+    const id = getId();
+    const type = drageNodeData?.name;
+    const newNode = { id, type, position, data: { label: `${type} ${id}` } };
 
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [drageNodeData],
-  );
+    setNodes((nds) => nds.concat(newNode));
+  };
 
-  /** 右键菜单事件 */
-  const handleNodeContextMenu = useCallback(
-    (event: React.MouseEvent, node: Node) => {
-      event.preventDefault();
+  /** 节点/连接线右键事件 */
+  const handleContextMenu = (event: React.MouseEvent, nodeOrEdge: any) => {
+    event.preventDefault();
 
-      const pane = ref.current?.getBoundingClientRect?.(); // 获取画布的宽高
-      const { width, height } = pane || { width: 0, height: 0 };
-      setContextMenu({
-        id: node.id,
-        top: event.clientY < height - 200 && event.clientY,
-        left: event.clientX < width - 200 && event.clientX,
-        right: event.clientX >= width - 200 && width - event.clientX,
-        bottom: event.clientY >= height - 200 && height - event.clientY,
-      });
-    },
-    [],
-  );
+    const { clientX, clientY } = event;
+    const { id, measured } = nodeOrEdge as Node & Edge;
 
-  /** 关闭右键菜单事件 */
-  const handleCloseContextMenu = useCallback(() => {
-    setContextMenu({});
+    const pane = ref.current?.getBoundingClientRect?.(); // 获取画布的宽高
+    const { width, height } = pane || { width: 0, height: 0 };
+    setContextMenu({
+      id: id,
+      type: measured ? 'node' : 'edge', // 节点或边
+      top: clientY < height - 200 && clientY,
+      left: clientX < width - 200 && clientX,
+      right: clientX >= width - 200 && width - clientX,
+      bottom: clientY >= height - 200 && height - clientY,
+    });
+  };
+
+  /** 节点/连接线右键关闭事件 */
+  const handleContextMenuClose = useCallback(() => {
+    setContextMenu(null);
   }, []);
 
-  /** 点击节点事件 */
+  /** 节点点击事件 */
   const handleNodeClick = useCallback(() => {
     console.log('handleNodeClick');
-    handleCloseContextMenu();
-  }, [handleCloseContextMenu]);
+    handleContextMenuClose();
+  }, [handleContextMenuClose]);
 
-  /** 点击面板事件 */
+  /** 连接线点击事件 */
+  const handleEdgeClick = useCallback(() => {
+    console.log('handleEdgeClick');
+    handleContextMenuClose();
+  }, []);
+
+  /** 面板点击事件 */
   const handlePaneClick = useCallback(() => {
     console.log('handlePaneClick');
-    handleCloseContextMenu();
+    handleContextMenuClose();
     onChangeRecord?.(undefined); // 关闭弹框
-  }, [handleCloseContextMenu, onChangeRecord]);
+  }, [handleContextMenuClose, onChangeRecord]);
 
   return (
     <div className="app">
@@ -159,7 +165,9 @@ function App(props: ReactFlowProps) {
         onDragOver={handleDragOver}
         onPaneClick={handlePaneClick}
         onNodeClick={handleNodeClick}
-        onNodeContextMenu={handleNodeContextMenu}
+        onNodeContextMenu={handleContextMenu}
+        onEdgeClick={handleEdgeClick}
+        onEdgeContextMenu={handleContextMenu}
         proOptions={{ hideAttribution: true }}
         {...props}
       >
@@ -167,15 +175,15 @@ function App(props: ReactFlowProps) {
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
 
         {/* 自定义左侧侧边栏 */}
-        <CustomLeftSidebar onClick={handleCloseContextMenu} />
+        <CustomLeftSidebar onClick={handleContextMenuClose} />
 
         {/* 自定义右侧侧边栏 */}
         {record && <CustomRightSidebar record={record} />}
 
         {/* 自定义右键菜单 */}
-        {Object.keys(contextMenu).length > 0 && (
+        {contextMenu && (
           <CustomContextMenu
-            onClick={handleCloseContextMenu}
+            onClick={handleContextMenuClose}
             {...contextMenu}
           />
         )}
