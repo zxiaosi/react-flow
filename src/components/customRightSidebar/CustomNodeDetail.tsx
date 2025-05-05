@@ -1,5 +1,10 @@
-/** 弹框配置 */
-const items = [
+import { useReactFlow } from '@xyflow/react';
+import { Input, InputNumber } from 'antd';
+import { get, set } from 'lodash';
+import './index.less';
+
+/** 配置 */
+const columns = [
   { type: 'text', name: 'id', label: '唯一ID - id', disabled: true },
   {
     type: 'text',
@@ -34,8 +39,49 @@ const items = [
 ] satisfies DetailColumns[];
 
 /** 右侧侧边栏-节点详情 */
-const CustomNodeDetail = ({ id }: { id: string | number }) => {
-  return <div>{id}</div>;
+const CustomNodeDetail = ({ id }: { id: string }) => {
+  const { getNode, updateNode } = useReactFlow();
+
+  const node = getNode(id); // 获取节点数据
+  if (!node?.style) node!.style = { ...node?.measured };
+
+  /** 节点数据变化事件 */
+  const handleChange = (value: any, item: DetailColumns) => {
+    const { name } = item;
+    set(node || {}, name, value); // 设置节点数据
+    updateNode(id, node || {}); // 更新节点数据
+  };
+
+  return (
+    <>
+      {columns.map((item) => {
+        const { type, name, label, disabled } = item;
+        const value = get(node || {}, name);
+
+        return (
+          <div key={label} className="custom-right-sidebar-item">
+            <div className="custom-right-sidebar-item-label">{label}</div>
+            {type === 'text' && (
+              <Input
+                disabled={disabled}
+                value={value}
+                onChange={(e) => handleChange(e.target.value, item)}
+              />
+            )}
+
+            {type === 'number' && (
+              <InputNumber
+                changeOnWheel={true}
+                disabled={disabled}
+                value={value}
+                onChange={(e) => handleChange(e, item)}
+              />
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
 };
 
 export default CustomNodeDetail;
