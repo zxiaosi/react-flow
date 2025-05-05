@@ -1,43 +1,27 @@
+import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 import { Panel } from '@xyflow/react';
+import { useShallow } from 'zustand/shallow';
+import CustomEdgeDetail from './CustomEdgeDetail';
+import CustomNodeDetail from './CustomNodeDetail';
 import './index.less';
 
-/** 弹框配置 */
-const items = [
-  { type: 'text', name: 'id', label: '唯一ID - id', disabled: true },
-  {
-    type: 'text',
-    name: ['data', 'label'],
-    label: '文案 - data.label',
-    disabled: false,
-  },
-  {
-    type: 'number',
-    name: ['style', 'width'],
-    label: '宽 - style.width',
-    disabled: false,
-  },
-  {
-    type: 'number',
-    name: ['style', 'height'],
-    label: '高 - style.height',
-    disabled: false,
-  },
-  {
-    type: 'number',
-    name: ['position', 'x'],
-    label: 'X坐标 - position.x',
-    disabled: false,
-  },
-  {
-    type: 'number',
-    name: ['position', 'y'],
-    label: 'Y坐标 - position.y',
-    disabled: false,
-  },
-];
+interface Props {
+  /** 点击事件 */
+  onClick: () => void;
+}
 
 /** 自定义右侧侧边栏 */
-const CustomRightSidebar = ({ record }: any) => {
+const CustomRightSidebar = ({ onClick }: Props) => {
+  const { record } = useRightSideBarConfig(
+    useShallow((state) => ({
+      record: state.record,
+    })),
+  );
+
+  if (!record) return null;
+
+  const { id, type } = record;
+
   // const { getNode, updateNode } = useReactFlow();
 
   // const node = getNode(nodeId); // 获取节点数据
@@ -56,8 +40,7 @@ const CustomRightSidebar = ({ record }: any) => {
 
   return (
     <Panel position="top-right">
-      <div className="custom-right-sidebar">
-        234
+      <div className="custom-right-sidebar" onClick={onClick}>
         {/* {items.map((item) => {
           const { type, name, label, disabled } = item;
 
@@ -73,6 +56,10 @@ const CustomRightSidebar = ({ record }: any) => {
             </div>
           );
         })} */}
+
+        {type === 'node' && <CustomNodeDetail id={id} />}
+
+        {type === 'edge' && <CustomEdgeDetail id={id} />}
       </div>
     </Panel>
   );

@@ -67,9 +67,8 @@ function App(props: ReactFlowProps) {
   );
 
   /** 右侧侧边栏配置 */
-  const { record, onChangeRecord } = useRightSideBarConfig(
+  const { onChangeRecord } = useRightSideBarConfig(
     useShallow((state) => ({
-      record: state.record,
       onChangeRecord: state.onChangeRecord,
     })),
   );
@@ -95,7 +94,9 @@ function App(props: ReactFlowProps) {
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
 
-    if (!drageNodeData) return;
+    const classList = event.target?.classList || [];
+
+    if (!classList?.contains('react-flow__pane') || !drageNodeData) return;
 
     const position = screenToFlowPosition({
       x: event.clientX,
@@ -175,10 +176,10 @@ function App(props: ReactFlowProps) {
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
 
         {/* 自定义左侧侧边栏 */}
-        <CustomLeftSidebar onClick={handleContextMenuClose} />
+        <CustomLeftSidebar onClick={handlePaneClick} />
 
         {/* 自定义右侧侧边栏 */}
-        {record && <CustomRightSidebar record={record} />}
+        <CustomRightSidebar onClick={handleContextMenuClose} />
 
         {/* 自定义右键菜单 */}
         {contextMenu && (

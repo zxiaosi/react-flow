@@ -26,11 +26,8 @@ const CustomNodeMenu = () => {
     })),
   );
 
-  /** 菜单拖拽开始事件 */
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    child: MenuItems,
-  ) => {
+  /** 节点拖拽开始事件 */
+  const handleDragStart = (event: React.DragEvent, child: MenuItems) => {
     onDrageNodeData?.(child);
   };
 

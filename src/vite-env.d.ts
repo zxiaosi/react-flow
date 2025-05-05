@@ -29,3 +29,14 @@ interface ContextMenu {
   /** 下间距 */
   bottom: any;
 }
+
+interface DetailColumns {
+  /** 字段类型 */
+  type: string;
+  /** 字段名 */
+  name: string | number | (string | number)[];
+  /** 标签的文本 */
+  label?: string;
+  /** 是否禁用 */
+  disabled?: boolean;
+}
