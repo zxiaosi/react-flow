@@ -1,4 +1,4 @@
-import CustomImportExportModal from '@/components/customImportExportModal';
+import { CustomImportExportModal } from '@/components';
 import { useReactFlow } from '@xyflow/react';
 import { memo, useRef } from 'react';
 import './index.less';
@@ -54,7 +54,7 @@ const CustomProjectMenu = () => {
           <div key={item.name}>
             <div className="custom-left-menu-title">{item.label}</div>
             <div className="custom-left-menu-content">
-              {item.children.map((child: any) => {
+              {item.children.map((child: MenuItems) => {
                 const { name, label, icon } = child;
                 return (
                   <div

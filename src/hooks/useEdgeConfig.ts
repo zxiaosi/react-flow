@@ -17,7 +17,7 @@ const useEdgeConfig = create<Props>((set) => ({
   onChangeAnimated: () => {
     set((state) => ({ animated: !state.animated }));
   },
-  edgeType: 'straight',
+  edgeType: 'default',
   onChangeEdgeType: (edgeType: string) => {
     set(() => ({ edgeType }));
   },

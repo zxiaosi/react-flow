@@ -9,4 +9,8 @@ interface MenuItems {
   icon?: string;
   /** 子菜单 */
   children?: MenuItems[];
+  /** 类型 */
+  type?: string;
+  /** 配置项 */
+  options?: any[];
 }

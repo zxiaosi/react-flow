@@ -18,24 +18,28 @@ const menuItems = [
       { name: 'customEdge', label: '自定义', icon: '&#xe604;' },
     ],
   },
-];
+] satisfies MenuItems[];
 
 /** 左侧菜单-连接线 */
 const CustomEdgeMenu = () => {
   const { setEdges } = useReactFlow();
 
   /** 连接线配置 */
-  const { animated, onChangeAnimated, onChangeEdgeType } = useEdgeConfig(
-    useShallow((state) => ({
-      animated: state.animated,
-      onChangeAnimated: state.onChangeAnimated,
-      onChangeEdgeType: state.onChangeEdgeType,
-    })),
-  );
+  const { animated, onChangeAnimated, edgeType, onChangeEdgeType } =
+    useEdgeConfig(
+      useShallow((state) => ({
+        animated: state.animated,
+        onChangeAnimated: state.onChangeAnimated,
+        edgeType: state.edgeType,
+        onChangeEdgeType: state.onChangeEdgeType,
+      })),
+    );
 
   /** 点击事件 */
-  const handleClick = (item) => {
-    switch (item.name) {
+  const handleClick = (item: MenuItems) => {
+    const { name } = item;
+
+    switch (name) {
       case 'animation':
         setEdges((edges) => {
           return edges?.map((edge) => ({ ...edge, animated: !animated }));
@@ -48,9 +52,9 @@ const CustomEdgeMenu = () => {
       case 'smoothstep':
       case 'customEdge':
         setEdges((edges) => {
-          return edges?.map((edge) => ({ ...edge, type: item.name }));
+          return edges?.map((edge) => ({ ...edge, type: name }));
         });
-        onChangeEdgeType?.(item.name);
+        onChangeEdgeType?.(name);
         break;
       default:
         break;
@@ -63,12 +67,16 @@ const CustomEdgeMenu = () => {
         <div key={item.name}>
           <div className="custom-left-menu-title">{item.label}</div>
           <div className="custom-left-menu-content">
-            {item.children.map((child: any) => {
+            {item.children.map((child: MenuItems) => {
               const { name, label, icon } = child;
               return (
                 <div
                   key={name}
                   className={`custom-left-menu-content-item`}
+                  style={{
+                    opacity:
+                      name === 'animation' || edgeType === name ? 1 : 0.5,
+                  }}
                   onClick={() => handleClick(child)}
                 >
                   <span

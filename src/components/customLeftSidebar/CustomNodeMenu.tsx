@@ -15,7 +15,7 @@ const menuItems = [
       { name: 'customGroup', label: '自定义节点组', icon: '&#xe9b3;' },
     ],
   },
-];
+] satisfies MenuItems[];
 
 /** 左侧菜单-节点 */
 const CustomNodeMenu = () => {
@@ -27,7 +27,10 @@ const CustomNodeMenu = () => {
   );
 
   /** 菜单拖拽开始事件 */
-  const handleDragStart = (e, child) => {
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    child: MenuItems,
+  ) => {
     onDrageNodeData?.(child);
   };
 
@@ -37,12 +40,12 @@ const CustomNodeMenu = () => {
         <div key={item.name}>
           <div className="custom-left-menu-title">{item.label}</div>
           <div className="custom-left-menu-content">
-            {item.children.map((child: any) => {
+            {item.children.map((child: MenuItems) => {
               const { name, label, icon } = child;
               return (
                 <div
-                  draggable
                   key={name}
+                  draggable
                   className={`custom-left-menu-content-item`}
                   onDragStart={(e) => handleDragStart(e, child)}
                 >

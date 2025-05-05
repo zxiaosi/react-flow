@@ -18,7 +18,7 @@ const menuItems = [
       { name: 'vertical', label: '垂直', icon: '&#xe602;' },
     ],
   },
-];
+] satisfies MenuItems[];
 
 /** 左侧菜单-布局 */
 const CustomLayoutMenu = () => {
@@ -39,13 +39,15 @@ const CustomLayoutMenu = () => {
   };
 
   /** 方向点击事件 */
-  const handleClick = (item) => {
-    switch (item.name) {
+  const handleClick = (item: MenuItems) => {
+    const { name } = item;
+
+    switch (name) {
       case 'horizontal':
       case 'vertical': {
         const nodes = getNodes();
         const edges = getEdges();
-        const direction = item.name === 'horizontal' ? 'LR' : 'TB';
+        const direction = name === 'horizontal' ? 'LR' : 'TB';
 
         const { nodes: layoutNodes, edges: layoutEdges } =
           getLayoutedElementsUtil(nodes, edges, direction);
@@ -67,7 +69,7 @@ const CustomLayoutMenu = () => {
         <div key={item.name}>
           <div className="custom-left-menu-title">{item.label}</div>
           <div className="custom-left-menu-content">
-            {item.children.map((child: any) => {
+            {item.children.map((child: MenuItems) => {
               const { name, label, icon, type = '', options = [] } = child;
               return type === 'select' ? (
                 <Select
