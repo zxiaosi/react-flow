@@ -21,7 +21,6 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
   } = props;
 
   const { getEdge, updateEdge } = useReactFlow();
-  console.log('edgePath', data?.vertices);
 
   let edgePath = '';
 
