@@ -143,24 +143,14 @@ function App(props: ReactFlowProps) {
     setContextMenu(null);
   }, []);
 
-  /** 节点点击事件 */
-  const handleNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
-      console.log('handleNodeClick', node);
+  /** 节点/连接线点击事件 */
+  const handleNodeEdgeClick = useCallback(
+    (event: React.MouseEvent, nodeOrEdge: Node | Edge) => {
+      console.log('handleNodeEdgeClick', nodeOrEdge);
 
       handleContextMenuClose(); // 关闭右键菜单
-      if (record) onChangeRecord?.({ ...record, id: node.id }); // 切换右侧侧边栏
-    },
-    [handleContextMenuClose, record, onChangeRecord],
-  );
-
-  /** 连接线点击事件 */
-  const handleEdgeClick = useCallback(
-    (event: React.MouseEvent, edge: Edge) => {
-      console.log('handleEdgeClick');
-
-      handleContextMenuClose(); // 关闭右键菜单
-      if (record) onChangeRecord?.({ ...record, id: edge.id }); // 切换右侧侧边栏
+      const type = nodeOrEdge?.measured ? 'node' : 'edge';
+      if (record) onChangeRecord?.({ ...record, id: nodeOrEdge.id, type }); // 切换右侧侧边栏
     },
     [handleContextMenuClose, record, onChangeRecord],
   );
@@ -186,9 +176,9 @@ function App(props: ReactFlowProps) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onPaneClick={handlePaneClick}
-        onNodeClick={handleNodeClick}
+        onNodeClick={handleNodeEdgeClick}
         onNodeContextMenu={handleContextMenu}
-        onEdgeClick={handleEdgeClick}
+        onEdgeClick={handleNodeEdgeClick}
         onEdgeContextMenu={handleContextMenu}
         proOptions={{ hideAttribution: true }}
         {...props}

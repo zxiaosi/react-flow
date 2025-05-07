@@ -25,6 +25,10 @@ const CustomRightSidebar = ({ onClick }: Props) => {
   return (
     <Panel position="top-right">
       <div className="custom-right-sidebar" onClick={onClick}>
+        <div className="custom-right-sidebar-title">
+          {type === 'node' ? '节点' : '连接线'}
+        </div>
+
         {type === 'node' && <CustomNodeDetail nodeId={id + ''} />}
 
         {type === 'edge' && <CustomEdgeDetail edgeId={id + ''} />}
