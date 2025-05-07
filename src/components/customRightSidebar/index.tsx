@@ -25,9 +25,9 @@ const CustomRightSidebar = ({ onClick }: Props) => {
   return (
     <Panel position="top-right">
       <div className="custom-right-sidebar" onClick={onClick}>
-        {type === 'node' && <CustomNodeDetail id={id + ''} />}
+        {type === 'node' && <CustomNodeDetail nodeId={id + ''} />}
 
-        {type === 'edge' && <CustomEdgeDetail id={id + ''} />}
+        {type === 'edge' && <CustomEdgeDetail edgeId={id + ''} />}
       </div>
     </Panel>
   );

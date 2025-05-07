@@ -14,13 +14,13 @@ const columns = [
   },
   {
     type: 'number',
-    name: ['style', 'width'],
+    name: 'width',
     label: '宽 - style.width',
     disabled: false,
   },
   {
     type: 'number',
-    name: ['style', 'height'],
+    name: 'height',
     label: '高 - style.height',
     disabled: false,
   },
@@ -39,17 +39,18 @@ const columns = [
 ] satisfies DetailColumns[];
 
 /** 右侧侧边栏-节点详情 */
-const CustomNodeDetail = ({ id }: { id: string }) => {
+const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
   const { getNode, updateNode } = useReactFlow();
 
-  const node = getNode(id); // 获取节点数据
-  if (!node?.style) node!.style = { ...node?.measured };
+  const node = getNode(nodeId); // 获取节点数据
+  if (!node?.width) node!.width = node?.measured?.width;
+  if (!node?.height) node!.height = node?.measured?.height;
 
   /** 节点数据变化事件 */
   const handleChange = (value: any, item: DetailColumns) => {
     const { name } = item;
     set(node || {}, name, value); // 设置节点数据
-    updateNode(id, node || {}); // 更新节点数据
+    updateNode(nodeId, node || {}); // 更新节点数据
   };
 
   return (

@@ -40,3 +40,6 @@ interface DetailColumns {
   /** 是否禁用 */
   disabled?: boolean;
 }
+
+/** 连接线拐点类型 */
+type VerticesType = { x: number; y: number }[];

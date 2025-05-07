@@ -39,17 +39,17 @@ const columns = [
 ] satisfies DetailColumns[];
 
 /** 右侧侧边栏-连接线详情 */
-const CustomEdgeDetail = ({ id }: { id: string }) => {
+const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
   const { getEdge, updateEdge } = useReactFlow();
 
-  const edge = getEdge(id); // 获取连接线数据
+  const edge = getEdge(edgeId); // 获取连接线数据
   console.log('edge', edge);
 
   /** 节点数据变化事件 */
   const handleChange = (value: any, item: DetailColumns) => {
     const { name } = item;
     set(edge || {}, name, value); // 设置节点数据
-    updateEdge(id, edge || {}); // 更新节点数据
+    updateEdge(edgeId, edge || {}); // 更新节点数据
   };
 
   return (

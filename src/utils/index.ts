@@ -105,3 +105,36 @@ export function textToJsonAndDownloadUtil(text = '', filename = 'data') {
     alert('转换或下载失败，请查看控制台获取详细信息');
   }
 }
+
+/**
+ * 从 SVG 路径中提取顶点坐标
+ * @param {string} path - SVG 路径
+ * @returns {VerticesType} - 顶点坐标数组
+ */
+export function extractVerticesFromPathUtil(path: string): VerticesType {
+  const vertices = [] as VerticesType;
+  const commands = path.split(/(?=[A-Z])/); // 分割 SVG 命令
+
+  let currentX = 0,
+    currentY = 0;
+
+  commands.forEach((cmd) => {
+    const [type, ...coords] = cmd.trim().split(/[\s,]+/);
+    const nums = coords.map(Number);
+
+    // 只提取直线指令（M/L/H/V）
+    if (type === 'M' || type === 'L') {
+      currentX = nums[0];
+      currentY = nums[1];
+      vertices.push({ x: currentX, y: currentY });
+    } else if (type === 'H') {
+      currentX = nums[0];
+      vertices.push({ x: currentX, y: currentY });
+    } else if (type === 'V') {
+      currentY = nums[0];
+      vertices.push({ x: currentX, y: currentY });
+    }
+  });
+
+  return vertices;
+}

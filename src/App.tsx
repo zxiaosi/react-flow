@@ -13,20 +13,21 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
+import { useCallback, useRef, useState } from 'react';
+import { useShallow } from 'zustand/shallow';
 
 import {
   CustomContextMenu,
   CustomLeftSidebar,
   CustomRightSidebar,
 } from '@/components';
-import useNodeConfig from '@/hooks/useNodeConfig';
-import { useCallback, useRef, useState } from 'react';
-import { useShallow } from 'zustand/shallow';
+import { CustomEdge } from '@/components/customTypesEdge';
 
-import CustomEdge from '@/components/customEdge';
+import useEdgeConfig from '@/hooks/useEdgeConfig';
+import useNodeConfig from '@/hooks/useNodeConfig';
+import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
+
 import '@xyflow/react/dist/style.css'; // 引入样式
-import useEdgeConfig from './hooks/useEdgeConfig';
-import useRightSideBarConfig from './hooks/useRightSideBarConfig';
 
 /** 唯一id */
 let id = 0;
