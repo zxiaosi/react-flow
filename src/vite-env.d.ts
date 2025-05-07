@@ -7,6 +7,13 @@ interface NodeDataType {
   [key: string]: unknown; // 添加索引签名
 }
 
+/** 连接线data配置 */
+interface EdgeDataType {
+  label?: string;
+  vertices?: VerticesType[];
+  [key: string]: unknown; // 添加索引签名
+}
+
 /** 菜单项 */
 interface MenuItems {
   /** 菜单key */

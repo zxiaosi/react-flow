@@ -1,14 +1,14 @@
 import { extractVerticesFromPathUtil } from '@/utils';
 import {
   BaseEdge,
+  Edge,
   EdgeProps,
   getSmoothStepPath,
   useReactFlow,
 } from '@xyflow/react';
-import { useEffect } from 'react';
 
 /** 自定义边 */
-const CustomEdge = (props: EdgeProps) => {
+const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
   const {
     id,
     sourceX,
@@ -20,17 +20,16 @@ const CustomEdge = (props: EdgeProps) => {
     data,
   } = props;
 
-  const { setEdges } = useReactFlow();
+  const { getEdge, updateEdge } = useReactFlow();
+  console.log('edgePath', data?.vertices);
 
   let edgePath = '';
 
-  const vertices = data?.vertices as VerticesType[];
-
-  if (vertices) {
+  if (data?.vertices) {
     // 组合所有路径点（起点 + 拐点 + 终点）
     const points = [
       { x: sourceX, y: sourceY },
-      ...(vertices || []), // 拐点
+      ...(data?.vertices || []), // 拐点
       { x: targetX, y: targetY },
     ];
 
@@ -53,26 +52,14 @@ const CustomEdge = (props: EdgeProps) => {
     });
 
     edgePath = path;
-  }
-
-  useEffect(() => {
-    // 初始化的时候执行
-
-    if (vertices) return;
 
     // 解析路径，获取拐点坐标
-    const newVertices = extractVerticesFromPathUtil(edgePath) || [];
+    const vertices = extractVerticesFromPathUtil(edgePath) || [];
 
-    // 设置边的拐点坐标;
-    setEdges((eds: any[]) => {
-      const newEds = eds.map((edge) => {
-        if (edge?.id === id)
-          return { ...edge, data: { ...edge.data, vertices: newVertices } };
-        else return edge;
-      });
-      return newEds;
-    });
-  }, [vertices]);
+    // 设置边的拐点坐标
+    const edge = getEdge(id);
+    updateEdge(id, { ...edge, data: { ...edge?.data, vertices: vertices } });
+  }
 
   return (
     <>
