@@ -1,6 +1,69 @@
+import { NODE_HEIGHT, NODE_WIDTH } from '@/global';
+import { Handle, Node, NodeProps, NodeResizer, Position } from '@xyflow/react';
+import './index.less';
+
+interface CustomHandleProps {
+  /** 节点id */
+  nodeId: string;
+  /** 节点方向 */
+  direction?: HandleType['position'];
+  /** 所有连接桩数据 */
+  allHandles?: HandleType[];
+}
+
+/** 自定义连接桩 */
+const CustomHandle = (props: CustomHandleProps) => {
+  const { nodeId, direction = 'Left', allHandles = [] } = props;
+  const handles = allHandles.filter((_) => _.position === direction) || [];
+  if (!handles || handles?.length === 0) return null;
+
+  return handles.map((handle: HandleType, idx: number) => {
+    const { id, type, position } = handle;
+
+    let style = {};
+    const percent = `${((idx + 1) / (handles.length + 1)) * 100}%`;
+    if (['Left', 'Right'].includes(direction)) style = { top: percent };
+    if (['Top', 'Bottom'].includes(direction)) style = { left: percent };
+    console.log('handle', style);
+
+    return (
+      <Handle
+        key={id}
+        id={`${nodeId}-${position}-${id}`}
+        type={type}
+        position={Position[direction]}
+        style={style}
+      />
+    );
+  });
+};
+
 /** 自定义节点 */
-const CustomNode = () => {
-  return <>123</>;
+const CustomNode = (props: NodeProps<Node<NodeDataType>>) => {
+  const { id, data, selected } = props;
+  const allHandles = data?.handles || [];
+
+  return (
+    <>
+      <div
+        className={`custom-node ${selected ? 'custom-node-selectable' : ''}`}
+      >
+        {data?.label || ''}
+      </div>
+
+      <NodeResizer
+        color="#ff0071"
+        isVisible={selected}
+        minWidth={NODE_WIDTH}
+        minHeight={NODE_HEIGHT}
+      />
+
+      <CustomHandle nodeId={id} direction="Top" allHandles={allHandles} />
+      <CustomHandle nodeId={id} direction="Bottom" allHandles={allHandles} />
+      <CustomHandle nodeId={id} direction="Left" allHandles={allHandles} />
+      <CustomHandle nodeId={id} direction="Right" allHandles={allHandles} />
+    </>
+  );
 };
 
 export default CustomNode;

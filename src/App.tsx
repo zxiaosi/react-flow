@@ -22,21 +22,20 @@ import {
   CustomRightSidebar,
 } from '@/components';
 import { CustomEdge } from '@/components/customTypesEdge';
+import { CustomNode } from '@/components/customTypesNode';
 
 import useEdgeConfig from '@/hooks/useEdgeConfig';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 
+import { getNodeIdUtil } from '@/utils';
+
 import '@xyflow/react/dist/style.css'; // 引入样式
 
-/** 唯一id */
-let id = 0;
-
-/** 生成唯一id */
-const getId = () => `node_${id++}`;
-
 /** 自定义节点类型 */
-const NODE_TYPES = {};
+const NODE_TYPES = {
+  customNode: CustomNode,
+};
 
 /** 自定义边类型 */
 const EDGE_TYPES: EdgeTypes = {
@@ -50,7 +49,7 @@ const EDGE_TYPES: EdgeTypes = {
  * - dagrejs/dagre v1.1.3 版本 可以解决上面问题
  */
 function App(props: ReactFlowProps) {
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, getNodes } = useReactFlow();
 
   /** 节点配置 */
   const { drageNodeData } = useNodeConfig(
@@ -103,7 +102,8 @@ function App(props: ReactFlowProps) {
       x: event.clientX,
       y: event.clientY,
     });
-    const id = getId();
+
+    const id = getNodeIdUtil(getNodes);
     const type = drageNodeData?.name;
     const newNode = { id, type, position, data: { label: `${type} ${id}` } };
 
@@ -158,6 +158,7 @@ function App(props: ReactFlowProps) {
       <ReactFlow
         ref={ref}
         edgeTypes={EDGE_TYPES}
+        nodeTypes={NODE_TYPES}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

@@ -9,6 +9,8 @@
     0 1px 3px 0 rgb(0 0 0 / 0.1),
     0 1px 2px -1px rgb(0 0 0 / 0.1);
   box-sizing: border-box;
+  max-height: calc(100vh - 30px);
+  overflow-y: auto;
 
   .custom-right-sidebar-item {
     .custom-right-sidebar-item-label {
@@ -17,6 +19,7 @@
       color: rgb(0 0 0/ 0.6);
     }
 
+    .ant-select,
     .ant-input-number {
       width: 100%;
     }
@@ -40,6 +43,51 @@
             color: rgb(0 0 0/ 0.6);
           }
         }
+      }
+    }
+
+    .custom-right-sidebar-item-handles-container {
+      .custom-right-sidebar-item-handles {
+        display: flex;
+        flex-direction: column;
+
+        .custom-right-sidebar-item-handle {
+          display: grid;
+          gap: 8px;
+          border: 1px dashed rgb(0 0 0/ 0.2);
+          border-radius: 4px;
+          padding: 8px;
+          margin-bottom: 8px;
+
+          .custom-right-sidebar-item-handle-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgb(0 0 0/ 0.65);
+            font-size: 12px;
+
+            span:last-child {
+              cursor: pointer;
+            }
+          }
+
+          .custom-right-sidebar-item-handle-id,
+          .custom-right-sidebar-item-handle-type,
+          .custom-right-sidebar-item-handle-position {
+            display: flex;
+            align-items: center;
+
+            & > div:first-child {
+              width: 50px;
+              color: rgb(0 0 0/ 0.65);
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+      .ant-btn {
+        width: 100%;
       }
     }
   }

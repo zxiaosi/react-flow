@@ -1,10 +1,14 @@
+import { NODE_HEIGHT, NODE_WIDTH } from '@/global';
 import dagre from '@dagrejs/dagre';
 import { Edge, Node } from '@xyflow/react';
 
-/** 节点宽度 */
-const NODE_WIDTH = 172;
-/** 节点高度 */
-const NODE_HEIGHT = 36;
+/** 获取节点唯一id */
+export const getNodeIdUtil = (getNodes: () => Node[]) => {
+  const nodes = getNodes?.();
+  const lastId = nodes?.[nodes?.length - 1]?.id;
+  const newNodeId = lastId ? parseInt(lastId) + 1 : 1;
+  return `${newNodeId}`;
+};
 
 /**
  * 获取布局后的节点和边

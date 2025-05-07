@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
+/** 节点data配置 */
+interface NodeDataType {
+  label?: string;
+  handles?: HandleType[];
+  [key: string]: unknown; // 添加索引签名
+}
+
+/** 菜单项 */
 interface MenuItems {
   /** 菜单key */
   name?: string;
@@ -15,6 +23,7 @@ interface MenuItems {
   options?: any[];
 }
 
+/** 右键菜单 */
 interface ContextMenu {
   /** 节点/连接线id */
   id: string | number;
@@ -30,6 +39,7 @@ interface ContextMenu {
   bottom: any;
 }
 
+/** 节点/连接线详情项 */
 interface DetailColumns {
   /** 字段类型 */
   type: string;
@@ -43,3 +53,13 @@ interface DetailColumns {
 
 /** 连接线拐点类型 */
 type VerticesType = { x: number; y: number }[];
+
+/** 连接桩类型 */
+interface HandleType {
+  /** 唯一标识 */
+  id: string;
+  /** 类型 */
+  type: 'source' | 'target';
+  /** 显示的位置 */
+  position: 'Left' | 'Right' | 'Top' | 'Bottom';
+}
