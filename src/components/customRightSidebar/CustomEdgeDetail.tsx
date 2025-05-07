@@ -43,7 +43,6 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
   const { getEdge, updateEdge } = useReactFlow();
 
   const edge = getEdge(edgeId); // 获取连接线数据
-  console.log('edge', edge);
 
   /** 节点数据变化事件 */
   const handleChange = (value: any, item: DetailColumns) => {

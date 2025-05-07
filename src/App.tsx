@@ -81,7 +81,12 @@ function App(props: ReactFlowProps) {
 
   /** 节点连线事件 */
   const handleConnect = (params: Connection) => {
-    const newEdge = { ...params, type: edgeType, animated };
+    console.log('handleConnect', params);
+    const { source, sourceHandle, target, targetHandle } = params;
+    const id = [source, sourceHandle, target, targetHandle]
+      .filter(Boolean)
+      .join('_');
+    const newEdge = { ...params, id, type: edgeType, animated };
     return setEdges((eds) => addEdge(newEdge, eds));
   };
 

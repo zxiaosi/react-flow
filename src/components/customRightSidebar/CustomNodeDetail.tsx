@@ -121,8 +121,11 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
                       >
                         <div className="custom-right-sidebar-item-handle-title">
                           <span>{idx + 1}</span>
-                          <span onClick={() => handleRemoveHandle(item, idx)}>
-                            关闭
+                          <span
+                            className="iconfont"
+                            onClick={() => handleRemoveHandle(item, idx)}
+                          >
+                            &#xe644;
                           </span>
                         </div>
 

@@ -3,8 +3,6 @@ import { Handle, Node, NodeProps, NodeResizer, Position } from '@xyflow/react';
 import './index.less';
 
 interface CustomHandleProps {
-  /** 节点id */
-  nodeId: string;
   /** 节点方向 */
   direction?: HandleType['position'];
   /** 所有连接桩数据 */
@@ -13,7 +11,7 @@ interface CustomHandleProps {
 
 /** 自定义连接桩 */
 const CustomHandle = (props: CustomHandleProps) => {
-  const { nodeId, direction = 'Left', allHandles = [] } = props;
+  const { direction = 'Left', allHandles = [] } = props;
   const handles = allHandles.filter((_) => _.position === direction) || [];
   if (!handles || handles?.length === 0) return null;
 
@@ -24,12 +22,11 @@ const CustomHandle = (props: CustomHandleProps) => {
     const percent = `${((idx + 1) / (handles.length + 1)) * 100}%`;
     if (['Left', 'Right'].includes(direction)) style = { top: percent };
     if (['Top', 'Bottom'].includes(direction)) style = { left: percent };
-    console.log('handle', style);
 
     return (
       <Handle
         key={id}
-        id={`${nodeId}-${position}-${id}`}
+        id={`${position}-${id}`}
         type={type}
         position={Position[direction]}
         style={style}
@@ -40,7 +37,7 @@ const CustomHandle = (props: CustomHandleProps) => {
 
 /** 自定义节点 */
 const CustomNode = (props: NodeProps<Node<NodeDataType>>) => {
-  const { id, data, selected } = props;
+  const { data, selected } = props;
   const allHandles = data?.handles || [];
 
   return (
@@ -58,10 +55,10 @@ const CustomNode = (props: NodeProps<Node<NodeDataType>>) => {
         minHeight={NODE_HEIGHT}
       />
 
-      <CustomHandle nodeId={id} direction="Top" allHandles={allHandles} />
-      <CustomHandle nodeId={id} direction="Bottom" allHandles={allHandles} />
-      <CustomHandle nodeId={id} direction="Left" allHandles={allHandles} />
-      <CustomHandle nodeId={id} direction="Right" allHandles={allHandles} />
+      <CustomHandle direction="Top" allHandles={allHandles} />
+      <CustomHandle direction="Bottom" allHandles={allHandles} />
+      <CustomHandle direction="Left" allHandles={allHandles} />
+      <CustomHandle direction="Right" allHandles={allHandles} />
     </>
   );
 };
