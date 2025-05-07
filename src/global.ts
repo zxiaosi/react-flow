@@ -28,3 +28,12 @@ export const HANDLE_POSITIONS = [
   { label: 'Bottom', value: 'Bottom' },
   { label: 'Left', value: 'Left' },
 ];
+
+/** 连接线的类型 */
+export const EDGE_TYPES = [
+  { label: 'Default', value: 'default' },
+  { label: 'Straight', value: 'straight' },
+  { label: 'Step', value: 'step' },
+  { label: 'Smoothstep', value: 'smoothstep' },
+  { label: 'CustomEdge', value: 'customEdge' },
+];

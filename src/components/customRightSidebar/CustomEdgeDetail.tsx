@@ -1,5 +1,6 @@
+import { EDGE_TYPES } from '@/global';
 import { useReactFlow } from '@xyflow/react';
-import { Input, InputNumber } from 'antd';
+import { Input, InputNumber, Select } from 'antd';
 import { get, set } from 'lodash';
 import './index.less';
 
@@ -19,19 +20,14 @@ const columns = [
     disabled: false,
   },
   {
-    type: 'text',
+    type: 'select',
     name: 'type',
     label: '类型 - type',
     disabled: false,
+    options: EDGE_TYPES,
   },
   {
-    type: 'text',
-    name: 'animated',
-    label: '动画 - animated',
-    disabled: false,
-  },
-  {
-    type: 'list',
+    type: 'vertices',
     name: ['data', 'vertices'],
     label: '拐点 - vertices',
     disabled: false,
@@ -54,7 +50,7 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
   return (
     <>
       {columns.map((item) => {
-        const { type, name, label, disabled } = item;
+        const { type, name, label, disabled, options } = item;
         const value = get(edge || {}, name);
 
         return (
@@ -77,9 +73,18 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
               />
             )}
 
-            {type === 'list' && (
+            {type === 'select' && (
+              <Select
+                value={value}
+                onChange={(e) => handleChange(e, item)}
+                options={options}
+                disabled={disabled}
+              />
+            )}
+
+            {type === 'vertices' && (
               <div className="custom-right-sidebar-item-vertices-container">
-                {value?.map((sub, idx) => {
+                {value?.map((sub: VerticesType, idx: number) => {
                   return (
                     <div
                       key={idx}
@@ -92,7 +97,10 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
                           changeOnWheel={true}
                           value={sub?.x}
                           onChange={(e) =>
-                            handleChange(e, { type, name: [...name, idx, 'x'] })
+                            handleChange(e, {
+                              ...item,
+                              name: [...name, idx, 'x'],
+                            })
                           }
                         />
                       </div>
@@ -103,7 +111,10 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
                           changeOnWheel={true}
                           value={sub?.y}
                           onChange={(e) =>
-                            handleChange(e, { type, name: [...name, idx, 'y'] })
+                            handleChange(e, {
+                              ...item,
+                              name: [...name, idx, 'y'],
+                            })
                           }
                         />
                       </div>

@@ -113,10 +113,10 @@ export function textToJsonAndDownloadUtil(text = '', filename = 'data') {
 /**
  * 从 SVG 路径中提取顶点坐标
  * @param {string} path - SVG 路径
- * @returns {VerticesType} - 顶点坐标数组
+ * @returns {VerticesType[]} - 顶点坐标数组
  */
-export function extractVerticesFromPathUtil(path: string): VerticesType {
-  const vertices = [] as VerticesType;
+export function extractVerticesFromPathUtil(path: string): VerticesType[] {
+  const vertices = [] as VerticesType[];
   const commands = path.split(/(?=[A-Z])/); // 分割 SVG 命令
 
   let currentX = 0,

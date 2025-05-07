@@ -24,9 +24,9 @@ const CustomEdge = (props: EdgeProps) => {
 
   let edgePath = '';
 
-  const vertices = data?.vertices as VerticesType;
+  const vertices = data?.vertices as VerticesType[];
 
-  if (vertices?.length > 0) {
+  if (vertices) {
     // 组合所有路径点（起点 + 拐点 + 终点）
     const points = [
       { x: sourceX, y: sourceY },
@@ -58,10 +58,10 @@ const CustomEdge = (props: EdgeProps) => {
   useEffect(() => {
     // 初始化的时候执行
 
-    if (!edgePath || vertices?.length > 0) return;
+    if (vertices) return;
 
     // 解析路径，获取拐点坐标
-    const newVertices = extractVerticesFromPathUtil(edgePath);
+    const newVertices = extractVerticesFromPathUtil(edgePath) || [];
 
     // 设置边的拐点坐标;
     setEdges((eds: any[]) => {
@@ -72,7 +72,7 @@ const CustomEdge = (props: EdgeProps) => {
       });
       return newEds;
     });
-  }, [edgePath, vertices]);
+  }, [vertices]);
 
   return (
     <>

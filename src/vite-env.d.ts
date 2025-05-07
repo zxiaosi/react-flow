@@ -49,10 +49,12 @@ interface DetailColumns {
   label?: string;
   /** 是否禁用 */
   disabled?: boolean;
+  /** 配置项 */
+  options?: any[];
 }
 
 /** 连接线拐点类型 */
-type VerticesType = { x: number; y: number }[];
+type VerticesType = { x: number; y: number };
 
 /** 连接桩类型 */
 interface HandleType {
