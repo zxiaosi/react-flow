@@ -67,8 +67,9 @@ function App(props: ReactFlowProps) {
   );
 
   /** 右侧侧边栏配置 */
-  const { onChangeRecord } = useRightSideBarConfig(
+  const { record, onChangeRecord } = useRightSideBarConfig(
     useShallow((state) => ({
+      record: state.record,
       onChangeRecord: state.onChangeRecord,
     })),
   );
@@ -82,6 +83,9 @@ function App(props: ReactFlowProps) {
   /** 节点连线事件 */
   const handleConnect = (params: Connection) => {
     console.log('handleConnect', params);
+
+    onChangeRecord?.(undefined); // 关闭右侧侧边栏
+
     const { source, sourceHandle, target, targetHandle } = params;
     const id = [source, sourceHandle, target, targetHandle]
       .filter(Boolean)
@@ -140,22 +144,32 @@ function App(props: ReactFlowProps) {
   }, []);
 
   /** 节点点击事件 */
-  const handleNodeClick = useCallback(() => {
-    console.log('handleNodeClick');
-    handleContextMenuClose();
-  }, [handleContextMenuClose]);
+  const handleNodeClick = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      console.log('handleNodeClick', node);
+
+      handleContextMenuClose(); // 关闭右键菜单
+      if (record) onChangeRecord?.({ ...record, id: node.id }); // 切换右侧侧边栏
+    },
+    [handleContextMenuClose, record, onChangeRecord],
+  );
 
   /** 连接线点击事件 */
-  const handleEdgeClick = useCallback(() => {
-    console.log('handleEdgeClick');
-    handleContextMenuClose();
-  }, []);
+  const handleEdgeClick = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
+      console.log('handleEdgeClick');
+
+      handleContextMenuClose(); // 关闭右键菜单
+      if (record) onChangeRecord?.({ ...record, id: edge.id }); // 切换右侧侧边栏
+    },
+    [handleContextMenuClose, record, onChangeRecord],
+  );
 
   /** 面板点击事件 */
   const handlePaneClick = useCallback(() => {
     console.log('handlePaneClick');
-    handleContextMenuClose();
-    onChangeRecord?.(undefined); // 关闭弹框
+    handleContextMenuClose(); // 关闭右键菜单
+    onChangeRecord?.(undefined); // 关闭右侧侧边栏
   }, [handleContextMenuClose, onChangeRecord]);
 
   return (
