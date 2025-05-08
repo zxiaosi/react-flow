@@ -35,7 +35,7 @@ interface MenuItems {
 /** 右键菜单 */
 interface ContextMenu {
   /** 节点/连接线id */
-  id: string | number;
+  id: string;
   /** 节点 或者 连接线 */
   type: 'node' | 'edge';
   /** 上间距 */

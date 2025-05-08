@@ -77,7 +77,7 @@ function App(props: ReactFlowProps) {
     const { source, sourceHandle, target, targetHandle } = params;
     const id = [source, sourceHandle, target, targetHandle]
       .filter(Boolean)
-      .join('_');
+      .join('->');
     const newEdge = { ...params, id, type: edgeType, animated };
     return setEdges((eds) => addEdge(newEdge, eds));
   };

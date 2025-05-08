@@ -16,21 +16,17 @@ const CustomHandle = (props: CustomHandleProps) => {
   if (!handles || handles?.length === 0) return null;
 
   return handles.map((handle: HandleType, idx: number) => {
-    const { id, type, position } = handle;
+    const { id, type } = handle;
 
     let style = {};
     const percent = `${((idx + 1) / (handles.length + 1)) * 100}%`;
     if (['Left', 'Right'].includes(direction)) style = { top: percent };
     if (['Top', 'Bottom'].includes(direction)) style = { left: percent };
 
+    const position = Position[direction];
+
     return (
-      <Handle
-        key={id}
-        id={`${position}-${id}`}
-        type={type}
-        position={Position[direction]}
-        style={style}
-      />
+      <Handle key={id} id={id} type={type} position={position} style={style} />
     );
   });
 };
@@ -55,10 +51,13 @@ const CustomNode = (props: NodeProps<Node<NodeDataType>>) => {
         minHeight={NODE_HEIGHT}
       />
 
-      <CustomHandle direction="Top" allHandles={allHandles} />
-      <CustomHandle direction="Bottom" allHandles={allHandles} />
-      <CustomHandle direction="Left" allHandles={allHandles} />
-      <CustomHandle direction="Right" allHandles={allHandles} />
+      {['Top', 'Bottom', 'Left', 'Right'].map((direction: any) => (
+        <CustomHandle
+          key={direction}
+          direction={direction}
+          allHandles={allHandles}
+        />
+      ))}
     </>
   );
 };

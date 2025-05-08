@@ -42,7 +42,10 @@ const CustomContextMenu = (props: Props) => {
         setNodes((nds) => nds.filter((node) => node.id !== id)); // 删除节点
 
         setEdges((eds) =>
-          eds.filter((edge) => edge.source !== id && edge.target !== id),
+          eds.filter(
+            ({ source, target, sourceHandle, targetHandle }) =>
+              ![source, target, sourceHandle, targetHandle].includes(id),
+          ),
         ); // 删除边
 
         onChangeRecord?.(undefined); // 隐藏弹框

@@ -5,7 +5,7 @@ import { get, set } from 'lodash';
 import './index.less';
 
 /** 唯一ID */
-let uniqueId = 0;
+let uniqueId = 1;
 
 /** 配置 */
 const columns = [
@@ -50,7 +50,7 @@ const columns = [
 
 /** 右侧侧边栏-节点详情 */
 const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
-  const { getNode, updateNode } = useReactFlow();
+  const { getNode, updateNode, setEdges } = useReactFlow();
   const updateNodeInternals = useUpdateNodeInternals();
 
   const node = getNode(nodeId); // 获取节点数据
@@ -68,7 +68,11 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
   /** 添加连接桩 */
   const handleAddHandle = ({ name }: DetailColumns) => {
     const handles: HandleType[] = get(node || {}, name) || [];
-    handles.push({ id: `${uniqueId++}`, type: 'source', position: 'Left' });
+    handles.push({
+      id: `handle${uniqueId++}`,
+      type: 'source',
+      position: 'Left',
+    });
     set(node || {}, name, handles);
     updateNode(nodeId, node || {}); // 更新节点数据
     updateNodeInternals(nodeId); // 更新节点内部数据(动态增加连接桩用)
@@ -77,10 +81,17 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
   /** 删除连接桩 */
   const handleRemoveHandle = ({ name }: DetailColumns, index: number) => {
     const handles = get(node || {}, name) || [];
-    handles.splice(index, 1);
+    const removeHandle = handles.splice(index, 1)?.[0] as HandleType;
     set(node || {}, name, handles);
     updateNode(nodeId, node || {}); // 更新节点数据
     updateNodeInternals(nodeId); // 更新节点内部数据(动态增加连接桩用)
+    setEdges((edges) => {
+      return edges.filter(({ source, target, sourceHandle, targetHandle }) => {
+        return ![source, target, sourceHandle, targetHandle].includes(
+          removeHandle.id,
+        ); // 删除连接线
+      });
+    });
   };
 
   return (
@@ -113,7 +124,7 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
               <div className="custom-right-sidebar-item-list-container">
                 <div className="custom-right-sidebar-item-list">
                   {value?.map((handle: HandleType, idx: number) => {
-                    const { id, type, position } = handle;
+                    const { type, position } = handle;
                     return (
                       <div
                         key={idx}
