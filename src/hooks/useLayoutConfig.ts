@@ -1,6 +1,7 @@
+import { NODE_SEP, RANK_SEP } from '@/global';
 import { create } from 'zustand';
 
-type Direction = 'TB' | 'LR' | undefined;
+type Direction = 'TB' | 'BT' | 'LR' | 'RL' | undefined;
 
 interface Props {
   /** 算法 */
@@ -8,9 +9,17 @@ interface Props {
   /** 切换算法事件 */
   onChangeAlgorithm?: (algorithm: string) => void;
   /** 方向 */
-  direction?: Direction;
+  rankdir?: Direction;
   /** 切换方向事件 */
-  onChangeDirection?: (direction: Direction) => void;
+  onChangeRankDir?: (direction: Direction) => void;
+  /** 图的各个层次之间的间距 */
+  ranksep?: number;
+  /** 图的各个层次之间的间距切换事件 */
+  onChangeRanksep?: (ranksep: number) => void;
+  /** 同层各个节点之间的间距 */
+  nodesep?: number;
+  /** 同层各个节点之间的间距切换事件 */
+  onChangeNodesep?: (nodesep: number) => void;
 }
 
 /** 布局配置 */
@@ -20,8 +29,16 @@ const useLayoutConfig = create<Props>((set) => ({
     set(() => ({ algorithm }));
   },
   direction: undefined,
-  onChangeDirection: (direction: Direction) => {
-    set(() => ({ direction }));
+  onChangeRankDir: (rankdir: Direction) => {
+    set(() => ({ rankdir }));
+  },
+  ranksep: RANK_SEP,
+  onChangeRanksep: (ranksep: number) => {
+    set(() => ({ ranksep }));
+  },
+  nodesep: NODE_SEP,
+  onChangeNodesep: (nodesep: number) => {
+    set(() => ({ nodesep }));
   },
 }));
 

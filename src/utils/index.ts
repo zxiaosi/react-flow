@@ -1,4 +1,4 @@
-import { NODE_HEIGHT, NODE_WIDTH } from '@/global';
+import { NODE_HEIGHT, NODE_SEP, NODE_WIDTH, RANK_SEP } from '@/global';
 import dagre from '@dagrejs/dagre';
 import { Edge, Node } from '@xyflow/react';
 
@@ -14,18 +14,22 @@ export const getNodeIdUtil = (getNodes: () => Node[]) => {
  * 获取布局后的节点和边
  * @param nodes 节点数据
  * @param edges 边数据
- * @param direction 布局方向 TB:上下 LR:左右
+ * @param rankdir 布局方向 TB:上下 LR:左右
+ * @param ranksep 层级间距
+ * @param nodesep 节点间距
  */
 export const getLayoutedElementsUtil = (
   nodes: Node[],
   edges: Edge[],
-  direction = 'TB',
+  rankdir = 'TB',
+  ranksep = RANK_SEP,
+  nodesep = NODE_SEP,
 ) => {
-  const isHorizontal = direction === 'LR';
+  const isHorizontal = rankdir === 'LR';
 
   // 创建一个新的 dagre 图 (一定要重新创建画布, 否则布局会错乱)
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: direction });
+  dagreGraph.setGraph({ rankdir, ranksep, nodesep });
 
   // 设置画布的节点
   nodes.forEach((node) => {

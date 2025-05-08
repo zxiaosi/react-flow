@@ -20,6 +20,8 @@ interface MenuItems {
   name?: string;
   /** 菜单名称 */
   label?: string;
+  /** 菜单值 */
+  value?: any;
   /** 图标icon */
   icon?: string;
   /** 子菜单 */

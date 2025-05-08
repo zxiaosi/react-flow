@@ -16,6 +16,11 @@ export const NODE_WIDTH = 150;
 /** 节点高度 */
 export const NODE_HEIGHT = 39;
 
+/** 层级间距 */
+export const RANK_SEP = 50;
+/** 节点间距 */
+export const NODE_SEP = 50;
+
 /** 主题类型 */
 export const THEME_TYPE = [
   { value: 'light', icon: '&#xe611;' },
