@@ -1,3 +1,16 @@
+import { CustomEdge } from '@/components/customTypesEdge';
+import { CustomNode } from '@/components/customTypesNode';
+
+/** 自定义节点类型 */
+export const NODE_TYPES = {
+  customNode: CustomNode,
+};
+
+/** 自定义边类型 */
+export const EDGE_TYPES = {
+  customEdge: CustomEdge,
+};
+
 /** 节点宽度 */
 export const NODE_WIDTH = 150;
 /** 节点高度 */
@@ -30,7 +43,7 @@ export const HANDLE_POSITIONS = [
 ];
 
 /** 连接线的类型 */
-export const EDGE_TYPES = [
+export const EDGE_TYPES_OPTIONS = [
   { label: 'Default', value: 'default' },
   { label: 'Straight', value: 'straight' },
   { label: 'Step', value: 'step' },

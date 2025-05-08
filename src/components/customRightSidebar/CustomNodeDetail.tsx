@@ -1,4 +1,4 @@
-import { HANDLE_POSITIONS, HANDLE_TYPES } from '@/global';
+import { HANDLE_POSITIONS, HANDLE_TYPES, NODE_TYPES } from '@/global';
 import { useReactFlow, useUpdateNodeInternals } from '@xyflow/react';
 import { Button, Input, InputNumber, Select } from 'antd';
 import { get, set } from 'lodash';
@@ -41,7 +41,7 @@ const columns = [
     disabled: false,
   },
   {
-    type: 'handles',
+    type: 'list',
     name: ['data', 'handles'],
     label: '连接桩 - data.handles',
     disabled: false,
@@ -109,17 +109,17 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
               />
             )}
 
-            {type === 'handles' && (
-              <div className="custom-right-sidebar-item-handles-container">
-                <div className="custom-right-sidebar-item-handles">
+            {type === 'list' && (
+              <div className="custom-right-sidebar-item-list-container">
+                <div className="custom-right-sidebar-item-list">
                   {value?.map((handle: HandleType, idx: number) => {
                     const { id, type, position } = handle;
                     return (
                       <div
                         key={idx}
-                        className="custom-right-sidebar-item-handle"
+                        className="custom-right-sidebar-item-list-subItem"
                       >
-                        <div className="custom-right-sidebar-item-handle-title">
+                        <div className="custom-right-sidebar-item-list-subItem-title">
                           <span>{idx + 1}</span>
                           <span
                             className="iconfont"
@@ -129,19 +129,8 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
                           </span>
                         </div>
 
-                        <div className="custom-right-sidebar-item-handle-id">
-                          <div>ID</div>
-
-                          <Input
-                            size="small"
-                            value={id}
-                            disabled
-                            prefix={`${nodeId} - `}
-                          />
-                        </div>
-
-                        <div className="custom-right-sidebar-item-handle-type">
-                          <div>类型</div>
+                        <div className="custom-right-sidebar-item-list-subItem-column">
+                          <span>类型</span>
 
                           <Select
                             size="small"
@@ -156,8 +145,8 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
                           />
                         </div>
 
-                        <div className="custom-right-sidebar-item-handle-position">
-                          <div>方向</div>
+                        <div className="custom-right-sidebar-item-list-subItem-column">
+                          <span>方向</span>
 
                           <Select
                             size="small"
@@ -179,8 +168,9 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
                 <Button
                   size="small"
                   type="primary"
-                  className="custom-right-sidebar-item-add-handle"
+                  className="custom-right-sidebar-item-list-add"
                   onClick={() => handleAddHandle(item)}
+                  disabled={!Object.keys(NODE_TYPES).includes(node?.type || '')}
                 >
                   添加连接桩
                 </Button>

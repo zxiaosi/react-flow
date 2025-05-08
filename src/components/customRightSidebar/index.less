@@ -29,34 +29,12 @@
       width: 100%;
     }
 
-    .custom-right-sidebar-item-vertices-container {
-      display: grid;
-      gap: 8px;
-
-      .custom-right-sidebar-item-vertices {
-        display: flex;
-        align-items: center;
-        gap: 0 4px;
-
-        & > div {
-          display: flex;
-          align-items: center;
-
-          span:first-child {
-            font-size: 12px;
-            margin-right: 2px;
-            color: rgb(0 0 0/ 0.6);
-          }
-        }
-      }
-    }
-
-    .custom-right-sidebar-item-handles-container {
-      .custom-right-sidebar-item-handles {
+    .custom-right-sidebar-item-list-container {
+      .custom-right-sidebar-item-list {
         display: flex;
         flex-direction: column;
 
-        .custom-right-sidebar-item-handle {
+        .custom-right-sidebar-item-list-subItem {
           display: grid;
           gap: 8px;
           border: 1px dashed rgb(0 0 0/ 0.2);
@@ -64,7 +42,7 @@
           padding: 8px;
           margin-bottom: 8px;
 
-          .custom-right-sidebar-item-handle-title {
+          .custom-right-sidebar-item-list-subItem-title {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -80,13 +58,11 @@
             }
           }
 
-          .custom-right-sidebar-item-handle-id,
-          .custom-right-sidebar-item-handle-type,
-          .custom-right-sidebar-item-handle-position {
+          .custom-right-sidebar-item-list-subItem-column {
             display: flex;
             align-items: center;
 
-            & > div:first-child {
+            & > span:first-child {
               width: 50px;
               color: rgb(0 0 0/ 0.65);
               font-size: 12px;
@@ -95,7 +71,7 @@
         }
       }
 
-      .ant-btn {
+      .custom-right-sidebar-item-list-add {
         width: 100%;
       }
     }

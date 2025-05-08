@@ -1,6 +1,6 @@
-import { EDGE_TYPES } from '@/global';
+import { EDGE_TYPES, EDGE_TYPES_OPTIONS } from '@/global';
 import { useReactFlow } from '@xyflow/react';
-import { Input, InputNumber, Select } from 'antd';
+import { Button, Input, InputNumber, Select } from 'antd';
 import { get, set } from 'lodash';
 import './index.less';
 
@@ -24,10 +24,10 @@ const columns = [
     name: 'type',
     label: '类型 - type',
     disabled: false,
-    options: EDGE_TYPES,
+    options: EDGE_TYPES_OPTIONS,
   },
   {
-    type: 'vertices',
+    type: 'list',
     name: ['data', 'vertices'],
     label: '拐点 - vertices',
     disabled: false,
@@ -36,7 +36,7 @@ const columns = [
 
 /** 右侧侧边栏-连接线详情 */
 const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
-  const { getEdge, updateEdge } = useReactFlow();
+  const { getEdge, updateEdge, getNode } = useReactFlow();
 
   const edge = getEdge(edgeId); // 获取连接线数据
 
@@ -45,6 +45,30 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
     const { name } = item;
     set(edge || {}, name, value); // 设置节点数据
     updateEdge(edgeId, edge || {}); // 更新节点数据
+  };
+
+  /** 添加连接线拐点 */
+  const handleAddVertice = ({ name }: DetailColumns) => {
+    const { source = '', target = '' } = edge || {};
+    const { x: sourceX = 0, y: sourceY = 0 } = getNode(source)?.position || {}; // 获取起始节点数据
+    const { x: targetX = 0, y: targetY = 0 } = getNode(target)?.position || {}; // 获取目标节点数据
+    const position = {
+      x: (sourceX - targetX) / 2,
+      y: (sourceY - targetY) / 2,
+    };
+
+    const vertices: VerticesType[] = get(edge || {}, name) || [];
+    vertices.push(position);
+    set(edge || {}, name, vertices);
+    updateEdge(edgeId, edge || {}); // 更新连接线数据
+  };
+
+  /** 删除连接线拐点 */
+  const handleRemoveVertice = ({ name }: DetailColumns, index: number) => {
+    const vertices = get(edge || {}, name) || [];
+    vertices.splice(index, 1);
+    set(edge || {}, name, vertices);
+    updateEdge(edgeId, edge || {}); // 更新连接线数据
   };
 
   return (
@@ -82,45 +106,67 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
               />
             )}
 
-            {type === 'vertices' && (
-              <div className="custom-right-sidebar-item-vertices-container">
-                {value?.map((sub: VerticesType, idx: number) => {
-                  return (
-                    <div
-                      key={idx}
-                      className="custom-right-sidebar-item-vertices"
-                    >
-                      <div className="custom-right-sidebar-item-vertices">
-                        <span>X</span>
-                        <InputNumber
-                          size="small"
-                          changeOnWheel={true}
-                          value={sub?.x}
-                          onChange={(e) =>
-                            handleChange(e, {
-                              ...item,
-                              name: [...name, idx, 'x'],
-                            })
-                          }
-                        />
+            {type === 'list' && (
+              <div className="custom-right-sidebar-item-list-container">
+                <div className="custom-right-sidebar-item-list">
+                  {value?.map((sub: VerticesType, idx: number) => {
+                    return (
+                      <div
+                        key={idx}
+                        className="custom-right-sidebar-item-list-subItem"
+                      >
+                        <div className="custom-right-sidebar-item-list-subItem-title">
+                          <span>{idx + 1}</span>
+                          <span
+                            className="iconfont"
+                            onClick={() => handleRemoveVertice(item, idx)}
+                          >
+                            &#xe644;
+                          </span>
+                        </div>
+
+                        <div className="custom-right-sidebar-item-list-subItem-column">
+                          <span>X</span>
+                          <InputNumber
+                            size="small"
+                            changeOnWheel={true}
+                            value={sub?.x}
+                            onChange={(e) =>
+                              handleChange(e, {
+                                ...item,
+                                name: [...name, idx, 'x'],
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="custom-right-sidebar-item-list-subItem-column">
+                          <span>Y</span>
+                          <InputNumber
+                            size="small"
+                            changeOnWheel={true}
+                            value={sub?.y}
+                            onChange={(e) =>
+                              handleChange(e, {
+                                ...item,
+                                name: [...name, idx, 'y'],
+                              })
+                            }
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <span>Y</span>
-                        <InputNumber
-                          size="small"
-                          changeOnWheel={true}
-                          value={sub?.y}
-                          onChange={(e) =>
-                            handleChange(e, {
-                              ...item,
-                              name: [...name, idx, 'y'],
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                <Button
+                  size="small"
+                  type="primary"
+                  className="custom-right-sidebar-item-list-add"
+                  onClick={() => handleAddVertice(item)}
+                  disabled={!Object.keys(EDGE_TYPES).includes(edge?.type || '')}
+                >
+                  添加连接桩
+                </Button>
               </div>
             )}
           </div>

@@ -4,7 +4,6 @@ import {
   BackgroundVariant,
   Connection,
   Edge,
-  EdgeTypes,
   Node,
   ReactFlow,
   ReactFlowProps,
@@ -21,26 +20,15 @@ import {
   CustomLeftSidebar,
   CustomRightSidebar,
 } from '@/components';
-import { CustomEdge } from '@/components/customTypesEdge';
-import { CustomNode } from '@/components/customTypesNode';
 
 import useEdgeConfig from '@/hooks/useEdgeConfig';
 import useNodeConfig from '@/hooks/useNodeConfig';
 import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 
+import { EDGE_TYPES, NODE_TYPES } from '@/global';
 import { getNodeIdUtil } from '@/utils';
 
 import '@xyflow/react/dist/style.css'; // 引入样式
-
-/** 自定义节点类型 */
-const NODE_TYPES = {
-  customNode: CustomNode,
-};
-
-/** 自定义边类型 */
-const EDGE_TYPES: EdgeTypes = {
-  customEdge: CustomEdge,
-};
 
 /**
  * 自定义拓扑

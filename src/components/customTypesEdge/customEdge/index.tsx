@@ -6,6 +6,7 @@ import {
   getSmoothStepPath,
   useReactFlow,
 } from '@xyflow/react';
+import { useRef } from 'react';
 
 /** 自定义边 */
 const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
@@ -22,7 +23,7 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
 
   const { getEdge, updateEdge } = useReactFlow();
 
-  let edgePath = '';
+  const edgePathRef = useRef(''); // 连接线路径
 
   if (data?.vertices) {
     // 组合所有路径点（起点 + 拐点 + 终点）
@@ -33,7 +34,7 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
     ];
 
     // 生成直角路径指令
-    edgePath = points.reduce((path, point, i) => {
+    edgePathRef.current = points.reduce((path, point, i) => {
       return i === 0
         ? `M ${point.x},${point.y}`
         : `${path} L ${point.x},${point.y}`;
@@ -50,10 +51,10 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
       borderRadius: 0, // 圆角还是直角
     });
 
-    edgePath = path;
+    edgePathRef.current = path;
 
     // 解析路径，获取拐点坐标
-    const vertices = extractVerticesFromPathUtil(edgePath) || [];
+    const vertices = extractVerticesFromPathUtil(edgePathRef.current) || [];
 
     // 设置边的拐点坐标
     const edge = getEdge(id);
@@ -62,7 +63,7 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} />
+      <BaseEdge id={id} path={edgePathRef.current} />
     </>
   );
 };
