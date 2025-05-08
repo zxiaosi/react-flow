@@ -6,7 +6,7 @@ import {
   getSmoothStepPath,
   useReactFlow,
 } from '@xyflow/react';
-import { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /** 自定义边 */
 const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
@@ -19,10 +19,12 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
     sourcePosition,
     targetPosition,
     data,
+    selected,
   } = props;
 
-  const { getEdge, updateEdge } = useReactFlow();
+  const { getEdge, updateEdge, screenToFlowPosition } = useReactFlow();
 
+  const mouseDownIdRef = useRef(-1); // 鼠标按下的拐点索引
   const edgePathRef = useRef(''); // 连接线路径
 
   if (data?.vertices) {
@@ -61,9 +63,68 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
     updateEdge(id, { ...edge, data: { ...edge?.data, vertices: vertices } });
   }
 
+  /** 鼠标移动事件 */
+  const handleMouseMove = (event: MouseEvent) => {
+    if (mouseDownIdRef.current < 0) return;
+    event.preventDefault();
+    const dragX = event.clientX;
+    const dragY = event.clientY;
+
+    const newVertices = [...(data?.vertices || [])];
+    newVertices[mouseDownIdRef.current] = screenToFlowPosition(
+      { x: dragX, y: dragY },
+      { snapToGrid: false },
+    );
+    // 设置边的拐点坐标
+    const edge = getEdge(id);
+    updateEdge(id, {
+      ...edge,
+      data: { ...edge?.data, vertices: newVertices },
+    });
+  };
+
+  /** 鼠标抬起事件 */
+  const handleMouseUp = () => {
+    mouseDownIdRef.current = -1;
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  /** 鼠标按下事件 */
+  const handleMouseDown = (e: React.MouseEvent, index: number) => {
+    mouseDownIdRef.current = index;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    e.preventDefault();
+  };
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
   return (
     <>
       <BaseEdge id={id} path={edgePathRef.current} />
+
+      {selected &&
+        data?.vertices &&
+        data?.vertices?.map((vertex, index) => (
+          <circle
+            key={index}
+            tabIndex={0}
+            cx={vertex.x}
+            cy={vertex.y}
+            r="4px"
+            fill="#ff0066"
+            strokeWidth={1}
+            stroke={mouseDownIdRef.current === index ? 'black' : 'white'}
+            style={{ pointerEvents: 'all', outline: 'none' }}
+            onMouseDown={(e) => handleMouseDown(e, index)}
+          />
+        ))}
     </>
   );
 };

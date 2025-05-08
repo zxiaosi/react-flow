@@ -53,8 +53,8 @@ const CustomEdgeDetail = ({ edgeId }: { edgeId: string }) => {
     const { x: sourceX = 0, y: sourceY = 0 } = getNode(source)?.position || {}; // 获取起始节点数据
     const { x: targetX = 0, y: targetY = 0 } = getNode(target)?.position || {}; // 获取目标节点数据
     const position = {
-      x: (sourceX - targetX) / 2,
-      y: (sourceY - targetY) / 2,
+      x: (sourceX + targetX) / 2,
+      y: (sourceY + targetY) / 2,
     };
 
     const vertices: VerticesType[] = get(edge || {}, name) || [];
