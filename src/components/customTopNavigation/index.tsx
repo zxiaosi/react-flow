@@ -91,7 +91,7 @@ const CustomTopNavigation = () => {
             const y = node.position.y + selectedNodes[0].position.y;
             return {
               ...node,
-              parentNode: undefined,
+              parentId: undefined,
               extent: undefined,
               position: { x, y },
             };
