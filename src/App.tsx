@@ -70,8 +70,6 @@ function App(props: ReactFlowProps) {
 
   /** 节点连线事件 */
   const handleConnect = (params: Connection) => {
-    console.log('handleConnect', params);
-
     onChangeRecord?.(undefined); // 关闭右侧侧边栏
 
     const { source, sourceHandle, target, targetHandle } = params;
@@ -91,9 +89,17 @@ function App(props: ReactFlowProps) {
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
 
-    const classList = event.target?.classList || [];
+    const className = event.target.parentNode?.className as string;
 
-    if (!classList?.contains('react-flow__pane') || !drageNodeData) return;
+    // 如果拖动到非画布节点时, 不执行拖拽事件
+    if (
+      !(
+        className?.includes('react-flow__render') ||
+        className?.includes('react-flow__node')
+      ) ||
+      !drageNodeData
+    )
+      return;
 
     const position = screenToFlowPosition({
       x: event.clientX,
