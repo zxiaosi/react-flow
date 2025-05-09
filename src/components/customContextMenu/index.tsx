@@ -1,26 +1,18 @@
+import { GROUP_NAMES } from '@/global';
 import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 import { useReactFlow } from '@xyflow/react';
+import { Button } from 'antd';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
 import './index.less';
 
 type Props = ContextMenu & { onClick: () => void };
 
-/** 右键菜单配置 */
-const menuItemsMap = {
-  node: [
-    { key: 'node-detail', label: '详情' },
-    { key: 'node-delete', label: '删除' },
-  ],
-  edge: [
-    { key: 'edge-detail', label: '详情' },
-    { key: 'edge-delete', label: '删除' },
-  ],
-};
-
 /** 自定义右键菜单 */
 const CustomContextMenu = (props: Props) => {
-  const { id, type, top, left, right, bottom, onClick } = props;
+  const { id, type, top, left, right, bottom, nodeOrEdge, onClick } = props;
+
+  console.log('props', props);
 
   const { setNodes, setEdges } = useReactFlow();
 
@@ -31,12 +23,28 @@ const CustomContextMenu = (props: Props) => {
     })),
   );
 
+  /** 右键菜单配置 */
+  const menuItemsMap = {
+    node: [
+      { key: 'node-detail', label: '详情', disabled: false },
+      {
+        key: 'node-delete',
+        label: '删除',
+        disabled: GROUP_NAMES.includes(type),
+      },
+    ],
+    edge: [
+      { key: 'edge-detail', label: '详情', disabled: false },
+      { key: 'edge-delete', label: '删除', disabled: false },
+    ],
+  };
+
   /** 详情事件 */
   const handleClick = (key: string) => {
     switch (key) {
       case 'node-detail':
       case 'edge-detail':
-        onChangeRecord?.({ id, type }); // 显示弹框
+        onChangeRecord?.({ id, type: nodeOrEdge }); // 显示弹框
         break;
       case 'node-delete': {
         setNodes((nds) => nds.filter((node) => node.id !== id)); // 删除节点
@@ -67,15 +75,17 @@ const CustomContextMenu = (props: Props) => {
       className="custom-context-menu"
       onClick={onClick}
     >
-      {menuItemsMap[type]?.map((item) => {
+      {menuItemsMap[nodeOrEdge]?.map((item) => {
         return (
-          <div
+          <Button
             key={item.key}
+            type="text"
             className="custom-context-menu-item"
             onClick={() => handleClick(item.key)}
+            disabled={item.disabled}
           >
             {item.label}
-          </div>
+          </Button>
         );
       })}
     </div>

@@ -36,8 +36,8 @@ interface MenuItems {
 interface ContextMenu {
   /** 节点/连接线id */
   id: string;
-  /** 节点 或者 连接线 */
-  type: 'node' | 'edge';
+  /** 节点/连接线类型 */
+  type: string;
   /** 上间距 */
   top: any;
   /** 左间距 */
@@ -46,6 +46,8 @@ interface ContextMenu {
   right: any;
   /** 下间距 */
   bottom: any;
+  /** 节点 或者 连接线 */
+  nodeOrEdge: 'node' | 'edge';
 }
 
 /** 节点/连接线详情项 */

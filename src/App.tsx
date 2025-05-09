@@ -135,13 +135,14 @@ function App(props: ReactFlowProps) {
     event.preventDefault();
 
     const { clientX, clientY } = event;
-    const { id, measured } = nodeOrEdge as Node & Edge;
+    const { id, type, measured } = nodeOrEdge as Node & Edge;
 
     const pane = ref.current?.getBoundingClientRect?.(); // 获取画布的宽高
     const { width, height } = pane || { width: 0, height: 0 };
     setContextMenu({
-      id: id,
-      type: measured ? 'node' : 'edge', // 节点或边
+      id,
+      type: type!,
+      nodeOrEdge: measured ? 'node' : 'edge', // 节点或边
       top: clientY < height - 200 && clientY,
       left: clientX < width - 200 && clientX,
       right: clientX >= width - 200 && width - clientX,
