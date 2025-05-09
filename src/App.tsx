@@ -94,7 +94,7 @@ function App(props: ReactFlowProps) {
     // 如果拖动到非画布节点时, 不执行拖拽事件
     if (
       !(
-        className?.includes('react-flow__render') ||
+        className?.includes('react-flow__renderer') ||
         className?.includes('react-flow__node')
       ) ||
       !drageNodeData
