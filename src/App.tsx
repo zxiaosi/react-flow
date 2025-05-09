@@ -5,6 +5,7 @@ import {
   Connection,
   Edge,
   Node,
+  OnSelectionChangeParams,
   ReactFlow,
   ReactFlowProps,
   ReactFlowProvider,
@@ -19,6 +20,7 @@ import {
   CustomContextMenu,
   CustomLeftSidebar,
   CustomRightSidebar,
+  CustomTopNavigation,
 } from '@/components';
 
 import useEdgeConfig from '@/hooks/useEdgeConfig';
@@ -29,6 +31,7 @@ import { EDGE_TYPES, NODE_TYPES } from '@/global';
 import { getNodeIdUtil } from '@/utils';
 
 import '@xyflow/react/dist/style.css'; // 引入样式
+import useSelectNodeEdge from './hooks/useSelectNodeEdge';
 
 /**
  * 自定义拓扑
@@ -62,6 +65,14 @@ function App(props: ReactFlowProps) {
     })),
   );
 
+  /** 节点/连接线选择事件 */
+  const { onChangeSelectedNodes, onChangeSelectedEdges } = useSelectNodeEdge(
+    useShallow((state) => ({
+      onChangeSelectedNodes: state.onChangeSelectedNodes,
+      onChangeSelectedEdges: state.onChangeSelectedEdges,
+    })),
+  );
+
   const ref = useRef<HTMLDivElement>(null); // 画布ref
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]); // 节点
@@ -69,49 +80,55 @@ function App(props: ReactFlowProps) {
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null); // 右键菜单
 
   /** 节点连线事件 */
-  const handleConnect = (params: Connection) => {
-    onChangeRecord?.(undefined); // 关闭右侧侧边栏
+  const handleConnect = useCallback(
+    (params: Connection) => {
+      onChangeRecord?.(undefined); // 关闭右侧侧边栏
 
-    const { source, sourceHandle, target, targetHandle } = params;
-    const id = [source, sourceHandle, target, targetHandle]
-      .filter(Boolean)
-      .join('->');
-    const newEdge = { ...params, id, type: edgeType, animated };
-    return setEdges((eds) => addEdge(newEdge, eds));
-  };
+      const { source, sourceHandle, target, targetHandle } = params;
+      const id = [source, sourceHandle, target, targetHandle]
+        .filter(Boolean)
+        .join('->');
+      const newEdge = { ...params, id, type: edgeType, animated };
+      return setEdges((eds) => addEdge(newEdge, eds));
+    },
+    [onChangeRecord, edgeType, animated, setEdges],
+  );
 
   /** 节点拖拽中事件 */
-  const handleDragOver = (event: React.DragEvent) => {
+  const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault(); // 一定要写, 否则onDrop事件不会触发
-  };
+  }, []);
 
   /** 节点拖拽事件 */
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
+  const handleDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
 
-    const className = event.target.parentNode?.className as string;
+      const className = event.target.parentNode?.className as string;
 
-    // 如果拖动到非画布节点时, 不执行拖拽事件
-    if (
-      !(
-        className?.includes('react-flow__renderer') ||
-        className?.includes('react-flow__node')
-      ) ||
-      !drageNodeData
-    )
-      return;
+      // 如果拖动到非画布节点时, 不执行拖拽事件
+      if (
+        !(
+          className?.includes('react-flow__renderer') ||
+          className?.includes('react-flow__node')
+        ) ||
+        !drageNodeData
+      )
+        return;
 
-    const position = screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
 
-    const id = getNodeIdUtil(getNodes);
-    const type = drageNodeData?.name;
-    const newNode = { id, type, position, data: { label: `${type} ${id}` } };
+      const id = getNodeIdUtil(getNodes);
+      const type = drageNodeData?.name;
+      const newNode = { id, type, position, data: { label: `${type} ${id}` } };
 
-    setNodes((nds) => nds.concat(newNode));
-  };
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [drageNodeData, screenToFlowPosition, setNodes],
+  );
 
   /** 节点/连接线右键事件 */
   const handleContextMenu = (event: React.MouseEvent, nodeOrEdge: any) => {
@@ -156,6 +173,15 @@ function App(props: ReactFlowProps) {
     onChangeRecord?.(undefined); // 关闭右侧侧边栏
   }, [handleContextMenuClose, onChangeRecord]);
 
+  /** 节点/连接线选择事件 */
+  const handleSelectionChange = useCallback(
+    (nodeEdgeObj: OnSelectionChangeParams) => {
+      onChangeSelectedNodes(nodeEdgeObj.nodes);
+      onChangeSelectedEdges(nodeEdgeObj.edges);
+    },
+    [onChangeSelectedEdges, onChangeSelectedNodes],
+  );
+
   return (
     <div className="app">
       <ReactFlow
@@ -174,6 +200,7 @@ function App(props: ReactFlowProps) {
         onNodeContextMenu={handleContextMenu}
         onEdgeClick={handleNodeEdgeClick}
         onEdgeContextMenu={handleContextMenu}
+        onSelectionChange={handleSelectionChange}
         proOptions={{ hideAttribution: true }}
         {...props}
       >
@@ -185,6 +212,9 @@ function App(props: ReactFlowProps) {
 
         {/* 自定义右侧侧边栏 */}
         <CustomRightSidebar onClick={handleContextMenuClose} />
+
+        {/* 自定义顶部导航栏 */}
+        <CustomTopNavigation />
 
         {/* 自定义右键菜单 */}
         {contextMenu && (

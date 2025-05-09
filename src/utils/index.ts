@@ -146,3 +146,29 @@ export function extractVerticesFromPathUtil(path: string): VerticesType[] {
 
   return vertices;
 }
+
+/**
+ * 计算节点组边界
+ * @param {Node[]} selectedNodes - 选中的节点数组
+ * @returns {{ minX: number, minY: number, maxX: number, maxY: number }} - 节点组边界
+ */
+export const calculateGroupBoundsUtil = (selectedNodes: Node[]) => {
+  if (selectedNodes.length === 0) return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  selectedNodes.forEach((node) => {
+    const nodeWidth = Number(node?.width || node?.measured?.width || 0);
+    const nodeHeight = Number(node?.height || node?.measured?.height || 0);
+
+    minX = Math.min(minX, node.position.x);
+    minY = Math.min(minY, node.position.y);
+    maxX = Math.max(maxX, node.position.x + nodeWidth);
+    maxY = Math.max(maxY, node.position.y + nodeHeight);
+  });
+
+  return { minX, minY, maxX, maxY };
+};
