@@ -12,7 +12,7 @@ const menuItems = [
       { name: 'default', label: '默认节点', icon: '&#xe652;' },
       { name: 'group', label: '默认节点组', icon: '&#xe631;' },
       { name: 'customNode', label: '自定义节点', icon: '&#xe603;' },
-      { name: 'customGroup', label: '自定义节点组', icon: '&#xe9b3;' },
+      { name: 'customGroupNode', label: '自定义节点组', icon: '&#xe9b3;' },
     ],
   },
 ] satisfies MenuItems[];

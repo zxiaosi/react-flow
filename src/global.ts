@@ -1,9 +1,13 @@
 import { CustomEdge } from '@/components/customTypesEdge';
-import { CustomNode } from '@/components/customTypesNode';
+import { CustomGroupNode, CustomNode } from '@/components/customTypesNode';
+
+/** 节点组数组 */
+export const GROUP_NAMES = ['group', 'customGroupNode'];
 
 /** 自定义节点类型 */
 export const NODE_TYPES = {
   customNode: CustomNode,
+  customGroupNode: CustomGroupNode,
 };
 
 /** 自定义边类型 */

@@ -30,3 +30,32 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.react-flow__handle {
+  background-color: var(--xy-handle-background-color-default);
+}
+
+.react-flow__handle.connectionindicator:hover {
+  pointer-events: all;
+  border-color: var(--xy-theme-edge-hover);
+  background-color: white;
+}
+
+.react-flow__handle.connectionindicator:focus,
+.react-flow__handle.connectingfrom,
+.react-flow__handle.connectingto {
+  border-color: var(--xy-theme-edge-hover);
+}
+
+.react-flow__node-resizer {
+  border-radius: 0;
+  border: none;
+}
+
+.react-flow__resize-control.handle {
+  background-color: #ffffff;
+  border-color: #9e86ed;
+  border-radius: 0;
+  width: 5px;
+  height: 5px;
+}

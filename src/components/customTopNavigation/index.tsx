@@ -1,8 +1,9 @@
+import { GROUP_NAMES } from '@/global';
 import useSelectNodeEdge from '@/hooks/useSelectNodeEdge';
-import { calculateGroupBoundsUtil } from '@/utils';
+import { calculateGroupBoundsUtil, compareArraysUtil } from '@/utils';
 import { Node, Panel, useReactFlow } from '@xyflow/react';
 import { Button, Space } from 'antd';
-import { first, last } from 'lodash';
+import { first } from 'lodash';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
 
@@ -24,7 +25,19 @@ const CustomTopNavigation = () => {
   const handleCreateGroup = () => {
     if (selectedNodes.length < 2) return;
 
-    const groupId = `auto-group-${first(selectedNodes)?.id}->${last(selectedNodes)?.id}`;
+    const nodeIds = selectedNodes.map((node) => node.id);
+
+    // 获取所有节点
+    const nodes = getNodes();
+    const isExists = nodes.some((node) => {
+      return (
+        GROUP_NAMES.includes(node.type!) &&
+        compareArraysUtil(nodeIds, node.id.split('->'))
+      );
+    });
+    if (isExists) return;
+
+    const groupId = nodeIds.join('->');
     const selectedNodeIds = selectedNodes.map((node) => node.id);
 
     // 获取所有节点的最大/最小坐标
@@ -33,15 +46,12 @@ const CustomTopNavigation = () => {
     // 创建组节点
     const groupNode = {
       id: groupId,
-      type: 'group',
+      type: 'customGroupNode',
       data: {},
       position: { x: minX, y: minY },
       width: Math.abs(maxX - minX),
       height: Math.abs(maxY - minY),
     };
-
-    // 获取所有节点
-    const nodes = getNodes();
 
     // 更新节点
     const updatedNodes: Node[] = nodes.map((node) => {
@@ -53,6 +63,7 @@ const CustomTopNavigation = () => {
           parentId: groupId,
           extent: 'parent',
           position: { x, y },
+          selected: false,
         };
       }
       return node;
@@ -64,7 +75,11 @@ const CustomTopNavigation = () => {
 
   /** 删除自动组事件 */
   const handleRemoveGroup = () => {
-    if (selectedNodes.length !== 1 || selectedNodes[0].type !== 'group') return;
+    if (
+      selectedNodes.length !== 1 ||
+      !GROUP_NAMES.includes(first(selectedNodes)!.type!)
+    )
+      return;
 
     const groupId = selectedNodes[0].id;
 
@@ -99,7 +114,9 @@ const CustomTopNavigation = () => {
     {
       key: 'remove-group',
       label: '删除组',
-      disabled: selectedNodes.length !== 1 || selectedNodes[0].type !== 'group',
+      disabled:
+        selectedNodes.length !== 1 ||
+        !GROUP_NAMES.includes(first(selectedNodes)!.type!),
       onClick: handleRemoveGroup,
     },
   ];
@@ -111,8 +128,8 @@ const CustomTopNavigation = () => {
           const { key, label, disabled, onClick } = item;
           return (
             <Button
-              type="primary"
               key={key}
+              type="primary"
               disabled={disabled}
               onClick={onClick}
             >

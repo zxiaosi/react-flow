@@ -1,6 +1,7 @@
 import { NODE_HEIGHT, NODE_SEP, NODE_WIDTH, RANK_SEP } from '@/global';
 import dagre from '@dagrejs/dagre';
 import { Edge, Node } from '@xyflow/react';
+import { isEqual, sortBy } from 'lodash';
 
 /** 获取节点唯一id */
 export const getNodeIdUtil = (getNodes: () => Node[]) => {
@@ -171,4 +172,19 @@ export const calculateGroupBoundsUtil = (selectedNodes: Node[]) => {
   });
 
   return { minX, minY, maxX, maxY };
+};
+
+/**
+ * 比较两个数组是否相同
+ * @param {any[]} arr1 - 第一个数组
+ * @param {any[]} arr2 - 第二个数组
+ * @returns {boolean} - 两个数组是否相同
+ */
+export const compareArraysUtil = (arr1: any[], arr2: any[]) => {
+  // 先对字符串数组进行排序
+  const sortedArr1 = sortBy(arr1);
+  const sortedArr2 = sortBy(arr2);
+
+  // 使用 isEqual 比较排序后的数组
+  return isEqual(sortedArr1, sortedArr2);
 };

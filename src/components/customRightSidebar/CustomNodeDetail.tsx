@@ -1,7 +1,7 @@
 import { HANDLE_POSITIONS, HANDLE_TYPES, NODE_TYPES } from '@/global';
 import { useReactFlow, useUpdateNodeInternals } from '@xyflow/react';
 import { Button, Input, InputNumber, Select } from 'antd';
-import { get, set } from 'lodash';
+import { get, omit, set } from 'lodash';
 import './index.less';
 
 /** 唯一ID */
@@ -181,7 +181,11 @@ const CustomNodeDetail = ({ nodeId }: { nodeId: string }) => {
                   type="primary"
                   className="custom-right-sidebar-item-list-add"
                   onClick={() => handleAddHandle(item)}
-                  disabled={!Object.keys(NODE_TYPES).includes(node?.type || '')}
+                  disabled={
+                    !Object.keys(
+                      omit(NODE_TYPES, ['customGroupNode']),
+                    ).includes(node?.type || '')
+                  }
                 >
                   添加连接桩
                 </Button>

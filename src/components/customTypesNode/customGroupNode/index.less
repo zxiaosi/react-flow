@@ -1,11 +1,11 @@
-.custom-node {
+.custom-group-node {
   width: 100%; // 节点 Resizer 用
   height: 100%; // 节点 Resizer 用
   box-sizing: border-box; // 节点 Resizer 用
 
   box-shadow: var(--xy-node-boxshadow-default);
   border-radius: var(--xy-node-border-radius-default);
-  background-color: var(--xy-node-background-color-default);
+  background-color: rgba(207, 182, 255, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,8 +15,9 @@
   flex-direction: column;
   border: var(--xy-node-border-default);
   color: var(--xy-node-color, var(--xy-node-color-default));
+  border-color: #9e86ed;
 
-  &:not(.custom-node-selectable):hover {
+  &:not(.custom-group-node-selectable):hover {
     box-shadow: var(
       --xy-node-boxshadow-hover,
       var(--xy-node-boxshadow-hover-default)
@@ -24,10 +25,10 @@
   }
 }
 
-.custom-node-selectable {
+.custom-group-node-selectable {
   z-index: 1000;
-  box-shadow: var(
-    --xy-node-boxshadow-selected,
-    var(--xy-node-boxshadow-selected-default)
-  );
+  // box-shadow: var(
+  //   --xy-node-boxshadow-selected,
+  //   var(--xy-node-boxshadow-selected-default)
+  // );
 }
