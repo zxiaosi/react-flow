@@ -14,13 +14,9 @@ interface Props {
 /** 连接线配置 */
 const useEdgeConfig = create<Props>((set) => ({
   animated: false,
-  onChangeAnimated: () => {
-    set((state) => ({ animated: !state.animated }));
-  },
+  onChangeAnimated: () => set((state) => ({ animated: !state.animated })),
   edgeType: 'default',
-  onChangeEdgeType: (edgeType: string) => {
-    set(() => ({ edgeType }));
-  },
+  onChangeEdgeType: (edgeType) => set(() => ({ edgeType })),
 }));
 
 export default useEdgeConfig;

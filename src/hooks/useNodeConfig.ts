@@ -10,9 +10,7 @@ interface Props {
 /** 节点配置 */
 const useNodeConfig = create<Props>((set) => ({
   drageNodeData: null,
-  onDrageNodeData: (nodeData) => {
-    set(() => ({ drageNodeData: nodeData }));
-  },
+  onDrageNodeData: (nodeData) => set(() => ({ drageNodeData: nodeData })),
 }));
 
 export default useNodeConfig;

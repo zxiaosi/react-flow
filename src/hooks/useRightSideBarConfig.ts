@@ -17,9 +17,7 @@ interface Props {
 /** 右侧侧边栏配置 */
 const useRightSideBarConfig = create<Props>((set) => ({
   record: undefined,
-  onChangeRecord: (record?: Record) => {
-    set(() => ({ record }));
-  },
+  onChangeRecord: (record) => set(() => ({ record })),
 }));
 
 export default useRightSideBarConfig;

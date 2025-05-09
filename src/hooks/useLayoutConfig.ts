@@ -25,21 +25,13 @@ interface Props {
 /** 布局配置 */
 const useLayoutConfig = create<Props>((set) => ({
   algorithm: 'dagre',
-  onChangeAlgorithm: (algorithm: string) => {
-    set(() => ({ algorithm }));
-  },
+  onChangeAlgorithm: (algorithm) => set(() => ({ algorithm })),
   direction: undefined,
-  onChangeRankDir: (rankdir: Direction) => {
-    set(() => ({ rankdir }));
-  },
+  onChangeRankDir: (rankdir) => set(() => ({ rankdir })),
   ranksep: RANK_SEP,
-  onChangeRanksep: (ranksep: number) => {
-    set(() => ({ ranksep }));
-  },
+  onChangeRanksep: (ranksep) => set(() => ({ ranksep })),
   nodesep: NODE_SEP,
-  onChangeNodesep: (nodesep: number) => {
-    set(() => ({ nodesep }));
-  },
+  onChangeNodesep: (nodesep) => set(() => ({ nodesep })),
 }));
 
 export default useLayoutConfig;
