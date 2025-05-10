@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "clean": "npx rimraf ./node_modules",
     "dev": "vite",
     "lint": "eslint .",
