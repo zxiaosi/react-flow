@@ -59,3 +59,6 @@ export const EDGE_TYPES_OPTIONS = [
   { label: 'Smoothstep', value: 'smoothstep' },
   { label: 'CustomEdge', value: 'customEdge' },
 ];
+
+/** 粘贴时偏移量 */
+export const OFFSET = 50;

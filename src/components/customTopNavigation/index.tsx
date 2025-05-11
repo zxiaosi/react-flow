@@ -1,4 +1,4 @@
-import { GROUP_NAMES } from '@/global';
+import { GROUP_NAMES, OFFSET } from '@/global';
 import useSelectNodeEdge from '@/hooks/useSelectNodeEdge';
 import {
   calculateGroupBoundsUtil,
@@ -131,20 +131,29 @@ const CustomTopNavigation = () => {
       ...node,
       id: nodeIdMap[node.id],
       position: {
-        x: node.position.x + 50,
-        y: node.position.y + 50,
+        x: node.position.x + OFFSET,
+        y: node.position.y + OFFSET,
       },
       selected: true,
     }));
 
     // 生成新边
     const newEdges = selectedEdges.map((edge) => {
-      const { source, target, sourceHandle, targetHandle } = edge;
+      const { source, target, sourceHandle, targetHandle, data } = edge;
       const newSource = nodeIdMap[source];
       const newTarget = nodeIdMap[target];
       const id = [newSource, sourceHandle, newTarget, targetHandle]
         .filter(Boolean)
         .join('->');
+
+      let newVertices = undefined;
+      if (data?.vertices) {
+        newVertices = data?.vertices?.map((vertex) => ({
+          x: vertex.x + OFFSET,
+          y: vertex.y + OFFSET,
+        }));
+      }
+
       return {
         ...edge,
         id,
@@ -152,7 +161,8 @@ const CustomTopNavigation = () => {
         target: newTarget || target,
         sourceHandle,
         targetHandle,
-        selected: false,
+        selected: true,
+        data: { ...data, vertices: newVertices },
       };
     });
 
