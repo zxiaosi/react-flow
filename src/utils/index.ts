@@ -4,10 +4,10 @@ import { Edge, Node } from '@xyflow/react';
 import { isEqual, sortBy } from 'lodash';
 
 /** 获取节点唯一id */
-export const getNodeIdUtil = (getNodes: () => Node[]) => {
+export const getNodeIdUtil = (getNodes: () => Node[], step: number = 0) => {
   const nodes = getNodes?.();
   const lastId = nodes?.[nodes?.length - 1]?.id;
-  const newNodeId = lastId ? parseInt(lastId) + 1 : 1;
+  const newNodeId = lastId ? parseInt(lastId) + 1 + step : 1;
   return `${newNodeId}`;
 };
 
