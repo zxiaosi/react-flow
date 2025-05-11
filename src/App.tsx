@@ -9,10 +9,11 @@ import {
   ReactFlow,
   ReactFlowProvider,
   useEdgesState,
+  useKeyPress,
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 import {
@@ -27,7 +28,7 @@ import useNodeConfig from '@/hooks/useNodeConfig';
 import useRightSideBarConfig from '@/hooks/useRightSideBarConfig';
 
 import { EDGE_TYPES, NODE_TYPES } from '@/global';
-import { getNodeIdUtil } from '@/utils';
+import { calculateNodeDeviationUtil, getNodeIdUtil } from '@/utils';
 
 import '@xyflow/react/dist/style.css'; // 引入样式
 import useSelectNodeEdge from './hooks/useSelectNodeEdge';
@@ -40,6 +41,16 @@ import useSelectNodeEdge from './hooks/useSelectNodeEdge';
  */
 function App() {
   const { screenToFlowPosition, getNodes } = useReactFlow();
+  /** 方向键位 */
+  const arrowPress = useKeyPress([
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+  ]);
+
+  /** shift键位 */
+  const shiftPress = useKeyPress('Shift');
 
   /** 节点配置 */
   const { drageNodeData } = useNodeConfig(
@@ -65,14 +76,22 @@ function App() {
   );
 
   /** 节点/连接线选择事件 */
-  const { onChangeSelectedNodes, onChangeSelectedEdges } = useSelectNodeEdge(
+  const {
+    selectedNodes,
+    onChangeSelectedNodes,
+    selectedEdges,
+    onChangeSelectedEdges,
+  } = useSelectNodeEdge(
     useShallow((state) => ({
+      selectedNodes: state.selectedNodes,
       onChangeSelectedNodes: state.onChangeSelectedNodes,
+      selectedEdges: state.selectedEdges,
       onChangeSelectedEdges: state.onChangeSelectedEdges,
     })),
   );
 
   const ref = useRef<HTMLDivElement>(null); // 画布ref
+  const selectedRef = useRef<Node[]>([]); // 选中连线
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]); // 节点
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]); // 边
@@ -178,9 +197,66 @@ function App() {
     (nodeEdgeObj: OnSelectionChangeParams) => {
       onChangeSelectedNodes(nodeEdgeObj.nodes);
       onChangeSelectedEdges(nodeEdgeObj.edges);
+      selectedRef.current = nodeEdgeObj.nodes;
     },
     [onChangeSelectedEdges, onChangeSelectedNodes],
   );
+
+  /** 调整自定义连接线拐点方法 */
+  const handleEdgesVertices = useCallback(
+    (nodes: Node[]) => {
+      const selectedEdgeIds = selectedEdges.map((edge) => edge.id);
+      const offset = calculateNodeDeviationUtil(selectedRef.current, nodes);
+      console.log('offset', offset, nodes);
+      setEdges((preEdges) => {
+        return preEdges.map((edge) => {
+          const { data, id } = edge;
+          if (selectedEdgeIds.includes(id) && data?.vertices) {
+            const newVertices = data?.vertices?.map((item) => {
+              return {
+                ...item,
+                x: item.x + offset.x,
+                y: item.y + offset.y,
+              };
+            });
+            return { ...edge, data: { ...data, vertices: newVertices } };
+          } else {
+            return edge;
+          }
+        });
+      });
+      selectedRef.current = nodes;
+    },
+    [setEdges, selectedEdges],
+  );
+
+  /** 节点/连接线选中之后拖拽事件 */
+  const handleSelectionDrag = useCallback(
+    (event: React.MouseEvent, nodes: Node[]) => {
+      handleEdgesVertices(nodes);
+    },
+    [handleEdgesVertices],
+  );
+
+  useEffect(() => {
+    if (shiftPress) return; // 如果 shift 按键被按下，则不执行任何操作
+    const allNodes = getNodes();
+    if (allNodes.length === 0) return;
+    if (selectedEdges.length === 0 || selectedNodes.length === 0) return;
+    console.log('KeyPress', arrowPress);
+    const selectedNodeIds = selectedNodes.map((node) => node.id);
+    const realSelectedNodes = allNodes.filter((node) => {
+      return selectedNodeIds.includes(node.id);
+    });
+    handleEdgesVertices(realSelectedNodes);
+  }, [
+    shiftPress,
+    arrowPress,
+    selectedEdges,
+    selectedNodes,
+    getNodes,
+    handleEdgesVertices,
+  ]);
 
   return (
     <div className="app">
@@ -201,6 +277,7 @@ function App() {
         onEdgeClick={handleNodeEdgeClick}
         onEdgeContextMenu={handleContextMenu}
         onSelectionChange={handleSelectionChange}
+        onSelectionDrag={handleSelectionDrag}
         // selectionKeyCode={'Shift'} // 选中一片
         // multiSelectionKeyCode={['Ctrl', 'Meta']} // 多选
         // deleteKeyCode={'Backspace'} // 删除选中节点

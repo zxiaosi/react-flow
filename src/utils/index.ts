@@ -188,3 +188,20 @@ export const compareArraysUtil = (arr1: any[], arr2: any[]) => {
   // 使用 isEqual 比较排序后的数组
   return isEqual(sortedArr1, sortedArr2);
 };
+
+/**
+ * 计算节点偏差
+ * @param {Node[]} oldNodes - 旧节点数组
+ * @param {Node[]} newNodes - 新节点数组
+ */
+export const calculateNodeDeviationUtil = (
+  oldNodes: Node[],
+  newNodes: Node[],
+) => {
+  const oldNodePoint = calculateGroupBoundsUtil(oldNodes);
+  const newNodePoint = calculateGroupBoundsUtil(newNodes);
+  return {
+    x: newNodePoint.minX - oldNodePoint.minX,
+    y: newNodePoint.minY - oldNodePoint.minY,
+  };
+};
