@@ -7,7 +7,6 @@ import {
   Node,
   OnSelectionChangeParams,
   ReactFlow,
-  ReactFlowProps,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
@@ -39,7 +38,7 @@ import useSelectNodeEdge from './hooks/useSelectNodeEdge';
  * - dagrejs/dagre v1.1.4 在老版浏览器(eg: chromev89.0.4389.90) 会报 Object.hasOwn is not a function 错误
  * - dagrejs/dagre v1.1.3 版本 可以解决上面问题
  */
-function App(props: ReactFlowProps) {
+function App() {
   const { screenToFlowPosition, getNodes } = useReactFlow();
 
   /** 节点配置 */
@@ -202,8 +201,10 @@ function App(props: ReactFlowProps) {
         onEdgeClick={handleNodeEdgeClick}
         onEdgeContextMenu={handleContextMenu}
         onSelectionChange={handleSelectionChange}
+        // selectionKeyCode={'Shift'} // 选中一片
+        // multiSelectionKeyCode={['Ctrl', 'Meta']} // 多选
+        // deleteKeyCode={'Backspace'} // 删除选中节点
         proOptions={{ hideAttribution: true }}
-        {...props}
       >
         {/* 背景 */}
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
@@ -230,10 +231,10 @@ function App(props: ReactFlowProps) {
 }
 
 /** App Provider */
-const AppProvider = (props: ReactFlowProps) => {
+const AppProvider = () => {
   return (
     <ReactFlowProvider>
-      <App {...props} />
+      <App />
     </ReactFlowProvider>
   );
 };
