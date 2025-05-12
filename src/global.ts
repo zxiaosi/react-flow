@@ -16,9 +16,9 @@ export const EDGE_TYPES = {
 };
 
 /** 节点宽度 */
-export const NODE_WIDTH = 150;
+export const NODE_WIDTH = 2;
 /** 节点高度 */
-export const NODE_HEIGHT = 39;
+export const NODE_HEIGHT = 2;
 
 /** 层级间距 */
 export const RANK_SEP = 50;
@@ -62,3 +62,6 @@ export const EDGE_TYPES_OPTIONS = [
 
 /** 粘贴时偏移量 */
 export const OFFSET = 50;
+
+/** 节点调节器颜色 */
+export const NODE_RESIZE_COLOR = '"#ff0071"';

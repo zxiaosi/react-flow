@@ -1,4 +1,4 @@
-import { NODE_HEIGHT, NODE_WIDTH } from '@/global';
+import { NODE_HEIGHT, NODE_RESIZE_COLOR, NODE_WIDTH } from '@/global';
 import { Node, NodeProps, NodeResizer } from '@xyflow/react';
 import './index.less';
 
@@ -15,7 +15,7 @@ const CustomGroupNode = (props: NodeProps<Node<NodeDataType>>) => {
       </div>
 
       <NodeResizer
-        color="#ff0071"
+        color={NODE_RESIZE_COLOR}
         isVisible={selected}
         minWidth={NODE_WIDTH}
         minHeight={NODE_HEIGHT}
