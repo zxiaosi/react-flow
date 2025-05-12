@@ -7,7 +7,7 @@ import {
 } from '@/utils';
 import { Node, Panel, useReactFlow } from '@xyflow/react';
 import { Button, Space } from 'antd';
-import { first } from 'lodash';
+import { cloneDeep, first } from 'lodash';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
 
@@ -127,7 +127,7 @@ const CustomTopNavigation = () => {
     );
 
     // 生成新节点
-    const newNodes = selectedNodes.map((node) => ({
+    const newNodes = cloneDeep(selectedNodes).map((node) => ({
       ...node,
       id: nodeIdMap[node.id],
       position: {
@@ -138,7 +138,7 @@ const CustomTopNavigation = () => {
     }));
 
     // 生成新边
-    const newEdges = selectedEdges.map((edge) => {
+    const newEdges = cloneDeep(selectedEdges).map((edge) => {
       const { source, target, sourceHandle, targetHandle, data } = edge;
       const newSource = nodeIdMap[source];
       const newTarget = nodeIdMap[target];
