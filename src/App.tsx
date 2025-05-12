@@ -203,60 +203,52 @@ function App() {
   );
 
   /** 调整自定义连接线拐点方法 */
-  const handleEdgesVertices = useCallback(
-    (nodes: Node[]) => {
-      const selectedEdgeIds = selectedEdges.map((edge) => edge.id);
-      const offset = calculateNodeDeviationUtil(selectedRef.current, nodes);
-      console.log('offset', offset, nodes);
-      setEdges((preEdges) => {
-        return preEdges.map((edge) => {
-          const { data, id } = edge;
-          if (selectedEdgeIds.includes(id) && data?.vertices) {
-            const newVertices = data?.vertices?.map((item) => {
-              return {
-                ...item,
-                x: item.x + offset.x,
-                y: item.y + offset.y,
-              };
-            });
-            return { ...edge, data: { ...data, vertices: newVertices } };
-          } else {
-            return edge;
-          }
-        });
+  const handleEdgesVertices = (nodes?: Node[]) => {
+    let realNodes = [] as Node[];
+    if (!nodes) {
+      const allNodes = getNodes();
+      if (allNodes.length === 0) return;
+      const selectedNodeIds = selectedNodes.map((node) => node.id);
+      const realSelectedNodes = allNodes.filter((node) => {
+        return selectedNodeIds.includes(node.id);
       });
-      selectedRef.current = nodes;
-    },
-    [setEdges, selectedEdges],
-  );
+      realNodes = realSelectedNodes;
+    } else {
+      realNodes = nodes;
+    }
+
+    const selectedEdgeIds = selectedEdges.map((edge) => edge.id);
+    const offset = calculateNodeDeviationUtil(selectedRef.current, realNodes);
+    console.log('offset', offset, realNodes);
+    setEdges((preEdges) => {
+      return preEdges.map((edge) => {
+        const { data, id } = edge;
+        if (selectedEdgeIds.includes(id) && data?.vertices) {
+          const newVertices = data?.vertices?.map((item) => {
+            return {
+              ...item,
+              x: item.x + offset.x,
+              y: item.y + offset.y,
+            };
+          });
+          return { ...edge, data: { ...data, vertices: newVertices } };
+        } else {
+          return edge;
+        }
+      });
+    });
+    selectedRef.current = realNodes;
+  };
 
   /** 节点/连接线选中之后拖拽事件 */
-  const handleSelectionDrag = useCallback(
-    (event: React.MouseEvent, nodes: Node[]) => {
-      handleEdgesVertices(nodes);
-    },
-    [handleEdgesVertices],
-  );
+  const handleSelectionDrag = (event: React.MouseEvent, nodes: Node[]) => {
+    handleEdgesVertices(nodes);
+  };
 
   useEffect(() => {
-    if (shiftPress) return; // 如果 shift 按键被按下，则不执行任何操作
-    const allNodes = getNodes();
-    if (allNodes.length === 0) return;
-    if (selectedEdges.length === 0 || selectedNodes.length === 0) return;
     console.log('KeyPress', arrowPress);
-    const selectedNodeIds = selectedNodes.map((node) => node.id);
-    const realSelectedNodes = allNodes.filter((node) => {
-      return selectedNodeIds.includes(node.id);
-    });
-    handleEdgesVertices(realSelectedNodes);
-  }, [
-    shiftPress,
-    arrowPress,
-    selectedEdges,
-    selectedNodes,
-    getNodes,
-    handleEdgesVertices,
-  ]);
+    handleEdgesVertices();
+  }, [arrowPress]);
 
   return (
     <div className="app">
