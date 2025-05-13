@@ -205,3 +205,13 @@ export const calculateNodeDeviationUtil = (
     y: newNodePoint.minY - oldNodePoint.minY,
   };
 };
+
+/** 下载图片 */
+export function downloadImageUtil(dataUrl: string) {
+  const a = document.createElement('a');
+
+  a.setAttribute('download', 'reactflow.png');
+  a.setAttribute('href', dataUrl);
+  a.click();
+  a.remove();
+}

@@ -1,12 +1,20 @@
-import { GROUP_NAMES, OFFSET } from '@/global';
+import { GROUP_NAMES, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET } from '@/global';
 import useSelectNodeEdge from '@/hooks/useSelectNodeEdge';
 import {
   calculateGroupBoundsUtil,
   compareArraysUtil,
+  downloadImageUtil,
   getNodeIdUtil,
 } from '@/utils';
-import { Node, Panel, useReactFlow } from '@xyflow/react';
+import {
+  getNodesBounds,
+  getViewportForBounds,
+  Node,
+  Panel,
+  useReactFlow,
+} from '@xyflow/react';
 import { Button, Space } from 'antd';
+import { toPng } from 'html-to-image';
 import { cloneDeep, first } from 'lodash';
 import { memo } from 'react';
 import { useShallow } from 'zustand/shallow';
@@ -186,6 +194,32 @@ const CustomTopNavigation = () => {
     ]);
   };
 
+  /** 下载图片事件 */
+  const handleDownloadImg = () => {
+    const nodesBounds = getNodesBounds(getNodes());
+    const viewport = getViewportForBounds(
+      nodesBounds,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+      0.5,
+      2,
+      1,
+    );
+
+    const viewDom = document.querySelector('.react-flow__viewport');
+    if (!viewDom) return;
+    toPng(viewDom as HTMLElement, {
+      backgroundColor: '#1a365d',
+      width: IMAGE_WIDTH,
+      height: IMAGE_HEIGHT,
+      style: {
+        width: `${IMAGE_WIDTH}px`,
+        height: `${IMAGE_HEIGHT}px`,
+        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+      },
+    }).then(downloadImageUtil);
+  };
+
   /** 导航栏按钮配置 */
   const navItems = [
     {
@@ -207,6 +241,12 @@ const CustomTopNavigation = () => {
       label: '粘贴',
       disabled: selectedNodes.length === 0,
       onClick: handlePaste,
+    },
+    {
+      key: 'downloadImg',
+      label: '下载图片',
+      disabled: false,
+      onClick: handleDownloadImg,
     },
   ];
 

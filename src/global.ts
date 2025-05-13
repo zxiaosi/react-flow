@@ -65,3 +65,9 @@ export const OFFSET = 50;
 
 /** 节点调节器颜色 */
 export const NODE_RESIZE_COLOR = '#ff0071';
+
+/** 导出图片的宽度 */
+export const IMAGE_WIDTH = 1920;
+
+/** 导出图片的高度 */
+export const IMAGE_HEIGHT = 1080;
