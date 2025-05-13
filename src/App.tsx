@@ -41,6 +41,7 @@ import useSelectNodeEdge from './hooks/useSelectNodeEdge';
  */
 function App() {
   const { screenToFlowPosition, getNodes } = useReactFlow();
+
   /** 方向键位 */
   const arrowPress = useKeyPress([
     'ArrowUp',
@@ -48,9 +49,6 @@ function App() {
     'ArrowLeft',
     'ArrowRight',
   ]);
-
-  /** shift键位 */
-  const shiftPress = useKeyPress('Shift');
 
   /** 节点配置 */
   const { drageNodeData } = useNodeConfig(

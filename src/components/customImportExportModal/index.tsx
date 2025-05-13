@@ -129,6 +129,9 @@ const CustomImportExportModal = forwardRef((props, ref) => {
   /** 确定事件 */
   const handleOk = () => {
     handleCancel();
+    setNodes(() => []);
+    setEdges(() => []);
+
     const values = formRef?.current?.getFieldsValue?.();
     const nodes = JSON.parse(values?.nodes || '[]');
     const edges = JSON.parse(values?.edges || '[]');
@@ -137,8 +140,8 @@ const CustomImportExportModal = forwardRef((props, ref) => {
     // separateDataUtil(nodes, NODE_FIELD_MAP, true);
     // separateDataUtil(edges, EDGE_FIELD_MAP, true);
 
-    setNodes(nodes);
-    setEdges(edges);
+    setNodes(() => nodes);
+    setEdges(() => edges);
     fitView();
   };
 
