@@ -71,3 +71,63 @@ export const IMAGE_WIDTH = 1920;
 
 /** 导出图片的高度 */
 export const IMAGE_HEIGHT = 1080;
+
+/**
+ * 节点字段映射（导入导出的时候用到）
+ * @example
+ * [
+ *  {
+ *    id: 'node_1',
+ *    type: 'default',
+ *    width: 200,
+ *    height: 200,
+ *    position: { x: 0, y: 0 },
+ *    data: {
+ *      label: 'Node 1',
+ *      handles: []
+ *    },
+ *  },
+ *  {...}
+ * ]
+ *
+ * =>
+ *
+ * [
+ *   {
+ *      fontend: { // 拓扑图所需字段, 后端用数据库一个JSON字段存储所有
+ *        id: 'node_1',
+ *        type: 'default',
+ *        width: 200,
+ *        height: 200,
+ *        poposition: { x: 0, y: 0 },
+ *        handles: []
+ *      },
+ *      backend: { // 业务字段单独存储
+ *         label: 'Node 1',
+ *      }
+ *   }
+ * ]
+ */
+export const NODE_FIELD_MAP = {
+  id: 'fontend.id',
+  type: 'fontend.type',
+  width: 'fontend.width',
+  height: 'fontend.height',
+  position: 'fontend.position',
+  'data.handles': 'fontend.handles',
+  'data.label': 'backend.label',
+};
+
+/**
+ * 连接线字段映射
+ * {@link NODE_FIELD_MAP}
+ */
+export const EDGE_FIELD_MAP = {
+  id: 'fontend.id',
+  type: 'fontend.type',
+  source: 'fontend.source',
+  target: 'fontend.target',
+  sourceHandle: 'fontend.sourceHandle',
+  targetHandle: 'fontend.targetHandle',
+  'data.vertices': 'fontend.vertices',
+};

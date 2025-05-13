@@ -38,6 +38,10 @@ const CustomImportExportModal = forwardRef((props, ref) => {
       const nodes = getNodes(); // 获取节点数据
       const edges = getEdges(); // 获取连接线数据
 
+      // 转换数据格式
+      // separateDataUtil(nodes, NODE_FIELD_MAP);
+      // separateDataUtil(edges, EDGE_FIELD_MAP);
+
       // 设置表单值
       formRef.current?.setFieldsValue({
         nodes: JSON.stringify(nodes, null, 2),
@@ -128,6 +132,11 @@ const CustomImportExportModal = forwardRef((props, ref) => {
     const values = formRef?.current?.getFieldsValue?.();
     const nodes = JSON.parse(values?.nodes || '[]');
     const edges = JSON.parse(values?.edges || '[]');
+
+    // 转换数据格式
+    // separateDataUtil(nodes, NODE_FIELD_MAP, true);
+    // separateDataUtil(edges, EDGE_FIELD_MAP, true);
+
     setNodes(nodes);
     setEdges(edges);
     fitView();

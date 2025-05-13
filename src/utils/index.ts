@@ -1,7 +1,7 @@
 import { NODE_HEIGHT, NODE_SEP, NODE_WIDTH, RANK_SEP } from '@/global';
 import dagre from '@dagrejs/dagre';
 import { Edge, Node } from '@xyflow/react';
-import { isEqual, sortBy } from 'lodash';
+import { get, invert, isEqual, set, sortBy } from 'lodash';
 
 /** 获取节点唯一id */
 export const getNodeIdUtil = (getNodes: () => Node[], step: number = 0) => {
@@ -214,4 +214,28 @@ export function downloadImageUtil(dataUrl: string) {
   a.setAttribute('href', dataUrl);
   a.click();
   a.remove();
+}
+
+/**
+ * 对传入的列表进行数据分离
+ * @param data - 传入的列表
+ * @param map - 字段映射关系
+ * @param isInvert - 是否反转分离
+ */
+export function separateDataUtil(
+  data: any[],
+  map: any,
+  isInvert: boolean = false,
+) {
+  const fieldMap = isInvert ? invert(map) : map;
+
+  return data?.map((item) => {
+    const newItem = {} as any;
+
+    Object.keys(fieldMap).forEach((key) => {
+      set(newItem, fieldMap[key], get(item, key));
+    });
+
+    return newItem;
+  });
 }
