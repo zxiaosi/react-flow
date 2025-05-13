@@ -64,4 +64,4 @@ export const EDGE_TYPES_OPTIONS = [
 export const OFFSET = 50;
 
 /** 节点调节器颜色 */
-export const NODE_RESIZE_COLOR = '"#ff0071"';
+export const NODE_RESIZE_COLOR = '#ff0071';
