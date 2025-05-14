@@ -19,13 +19,13 @@ const columns = [
   {
     type: 'number',
     name: 'width',
-    label: '宽 - style.width',
+    label: '宽 - width',
     disabled: false,
   },
   {
     type: 'number',
     name: 'height',
-    label: '高 - style.height',
+    label: '高 - height',
     disabled: false,
   },
   {
