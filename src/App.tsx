@@ -7,6 +7,7 @@ import {
   Node,
   OnSelectionChangeParams,
   ReactFlow,
+  ReactFlowInstance,
   ReactFlowProvider,
   useEdgesState,
   useKeyPress,
@@ -95,6 +96,11 @@ function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]); // 边
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null); // 右键菜单
 
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<
+    Node,
+    Edge
+  > | null>(null);
+
   /** 节点连线事件 */
   const handleConnect = useCallback(
     (params: Connection) => {
@@ -104,7 +110,7 @@ function App() {
       const id = [source, sourceHandle, target, targetHandle]
         .filter(Boolean)
         .join('->');
-      const newEdge = { ...params, id, type: edgeType, animated };
+      const newEdge = { ...params, id, type: 'customEdge', animated };
       return setEdges((eds) => addEdge(newEdge, eds));
     },
     [onChangeRecord, edgeType, animated, setEdges],
@@ -248,10 +254,14 @@ function App() {
     handleEdgesVertices();
   }, [arrowPress]);
 
+  // 导出的时候用
+  // console.log('rfInstance', rfInstance?.toObject());
+
   return (
     <div className="app">
       <ReactFlow
         ref={ref}
+        onInit={setRfInstance}
         edgeTypes={EDGE_TYPES}
         nodeTypes={NODE_TYPES}
         nodes={nodes}

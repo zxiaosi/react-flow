@@ -137,6 +137,8 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
           dur={'6s'}
           repeatCount={'indefinite'}
           path={edgePathRef.current}
+          // keyPoints={'1;0'}
+          // keyTimes={'0;1'}
         />
       </circle>
     </>
