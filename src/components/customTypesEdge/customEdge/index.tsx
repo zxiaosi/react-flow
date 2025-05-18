@@ -125,6 +125,20 @@ const CustomEdge = (props: EdgeProps<Edge<EdgeDataType>>) => {
             onMouseDown={(e) => handleMouseDown(e, index)}
           />
         ))}
+
+      <circle
+        r={'4'}
+        fill="yellow"
+        style={{
+          filter: 'drop-shadow(0px 0px 2px #ffc300)',
+        }}
+      >
+        <animateMotion
+          dur={'6s'}
+          repeatCount={'indefinite'}
+          path={edgePathRef.current}
+        />
+      </circle>
     </>
   );
 };
